@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertCircle } from "lucide-react"
+import { AlertCircle, ArrowLeft } from "lucide-react"
 import { useApp } from "@/lib/context/app-context"
 import { useTranslation } from "@/lib/i18n/use-translation"
 import { LanguageSwitcher } from "@/components/language-switcher"
@@ -58,13 +58,21 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 flex items-center justify-center p-4 page-transition">
+      <div className="absolute top-4 left-4 z-20">
+        <Link href="/">
+          <Button variant="ghost" size="sm" className="gap-2 btn-enhanced hover-lift">
+            <ArrowLeft className="h-4 w-4" />
+            {t.common.back}
+          </Button>
+        </Link>
+      </div>
       <div className="absolute top-4 right-4 animate-slide-in-right z-20">
         <LanguageSwitcher />
       </div>
       <Card className="w-full max-w-md glass shadow-brand-lg animate-scale-in border-glow hover-lift relative z-10">
         <CardHeader className="text-center relative z-10">
-          <div className="flex justify-center mb-4 animate-float">
-            <PlatformLogo showTitle={false} size="lg" />
+          <div className="flex justify-center mb-4">
+            <PlatformLogo showTitle={false} size="xl" />
           </div>
           <CardTitle className="text-2xl gradient-text animate-fade-in animate-delay-100">{t.auth.loginTitle}</CardTitle>
           <CardDescription className="animate-fade-in animate-delay-200">{t.auth.loginDescription}</CardDescription>

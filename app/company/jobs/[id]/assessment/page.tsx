@@ -139,7 +139,7 @@ export default function AssessmentPage({ params }: { params: Promise<{ id: strin
                 const Icon = sectionIcons[section.sectionType as keyof typeof sectionIcons]
                 const sectionQuestions = questions.filter((q) => q.sectionId === section.id)
                 return (
-                  <Card key={section.id} className="card-enhanced hover-lift shadow-brand animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+                  <Card key={section.id} className="card-enhanced hover-lift shadow-brand">
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between">
                         <div className="flex items-start gap-4 flex-1">

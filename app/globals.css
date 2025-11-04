@@ -296,6 +296,16 @@ header.glass > div {
   padding-bottom: 0.75rem !important;
 }
 
+/* Force center alignment for Features heading in both languages */
+.features-heading {
+  text-align: center !important;
+}
+
+[dir="rtl"] .features-heading,
+[dir="ltr"] .features-heading {
+  text-align: center !important;
+}
+
 /* Global Animations and Transitions */
 @keyframes fadeIn {
   from {

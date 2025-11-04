@@ -1,12 +1,12 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import { Clock, ChevronLeft, ChevronRight, CheckCircle } from "lucide-react"
+import { Clock, ChevronLeft, ChevronRight, CheckCircle, AlertTriangle } from "lucide-react"
 import { useApp } from "@/lib/context/app-context"
 import { useTranslation } from "@/lib/i18n/use-translation"
 import MCQQuestion from "./question-types/mcq-question"
@@ -30,6 +30,8 @@ export default function AssessmentTaker({ submission, existingAnswers }: Assessm
   const [answers, setAnswers] = useState<Record<string, any>>({})
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null)
   const [saving, setSaving] = useState(false)
+  const [cheatingDetected, setCheatingDetected] = useState(false)
+  const hasDetectedCheating = useRef(false)
 
   const sections = submission.assessments?.assessment_sections || submission.assessments?.sections || []
   const currentSection = sections[currentSectionIndex]
@@ -45,9 +47,71 @@ export default function AssessmentTaker({ submission, existingAnswers }: Assessm
     setAnswers(answersMap)
   }, [existingAnswers])
 
+  // Auto-submit handler for cheating detection
+  const handleAutoSubmitCheating = useCallback(async () => {
+    if (hasDetectedCheating.current && submission.status !== "submitted") {
+      try {
+        updateSubmission(submission.id, {
+          status: "submitted",
+          submittedAt: new Date().toISOString(),
+          cheatingDetected: true,
+          cheatingDetectedAt: new Date().toISOString(),
+        })
+
+        // Show alert and redirect
+        alert(t.assessments.cheatingDetectedMessage)
+        router.push("/candidate/applications")
+      } catch (error) {
+        console.error("Failed to auto-submit due to cheating:", error)
+      }
+    }
+  }, [submission.id, submission.status, updateSubmission, router, t.assessments.cheatingDetectedMessage])
+
+  // Cheating detection
+  useEffect(() => {
+    if (submission.status === "submitted" || submission.cheatingDetected) {
+      return
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.hidden && !hasDetectedCheating.current) {
+        hasDetectedCheating.current = true
+        setCheatingDetected(true)
+        handleAutoSubmitCheating()
+      }
+    }
+
+    const handleBlur = () => {
+      if (!hasDetectedCheating.current) {
+        hasDetectedCheating.current = true
+        setCheatingDetected(true)
+        handleAutoSubmitCheating()
+      }
+    }
+
+    const handleFocus = () => {
+      if (hasDetectedCheating.current && !document.hidden) {
+        // Already detected, but user came back - show message
+        if (submission.status !== "submitted") {
+          handleAutoSubmitCheating()
+        }
+      }
+    }
+
+    document.addEventListener("visibilitychange", handleVisibilityChange)
+    window.addEventListener("blur", handleBlur)
+    window.addEventListener("focus", handleFocus)
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange)
+      window.removeEventListener("blur", handleBlur)
+      window.removeEventListener("focus", handleFocus)
+    }
+  }, [submission, handleAutoSubmitCheating])
+
   // Timer
   useEffect(() => {
-    if (!submission.assessments?.timeLimitMinutes) return
+    if (!submission.assessments?.timeLimitMinutes || cheatingDetected) return
 
     const startTime = new Date(submission.startedAt).getTime()
     const limitMs = submission.assessments.timeLimitMinutes * 60 * 1000
@@ -64,7 +128,7 @@ export default function AssessmentTaker({ submission, existingAnswers }: Assessm
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [submission])
+  }, [submission, cheatingDetected])
 
   // Auto-save
   const saveAnswer = useCallback(
@@ -192,6 +256,20 @@ export default function AssessmentTaker({ submission, existingAnswers }: Assessm
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 section-spacing page-transition">
+      {/* Cheating Detection Warning */}
+      {!cheatingDetected && (
+        <Card className="card-enhanced shadow-brand animate-fade-in border-danger/30 bg-danger/5">
+          <CardContent className="p-4">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="h-5 w-5 text-danger flex-shrink-0 mt-0.5" />
+              <p className="text-sm font-medium text-danger">
+                {t.assessments.cheatingWarningNotice}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Header */}
       <Card className="card-enhanced shadow-brand animate-fade-in">
         <CardContent className="p-6">

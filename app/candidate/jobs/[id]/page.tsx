@@ -53,11 +53,11 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 section-spacing page-transition">
-      <Link href="/candidate/jobs" className="animate-fade-in">
+      <Link href="/candidate/jobs">
         <Button variant="ghost" className="btn-enhanced hover-lift">{t.common.back} ← {t.nav.jobs}</Button>
       </Link>
 
-      <Card className="card-enhanced shadow-brand animate-fade-in animate-delay-100">
+      <Card className="card-enhanced shadow-brand">
         <CardHeader>
           <div className="flex items-start gap-4">
             <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 animate-float">
@@ -103,7 +103,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
           )}
 
           {jobAssessment && (
-            <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 animate-fade-in animate-delay-200">
+            <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
               <div className="flex items-start gap-3">
                 <FileText className="h-5 w-5 text-primary flex-shrink-0 mt-0.5 animate-float" />
                 <div>
@@ -115,7 +115,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
           )}
 
           {existingSubmission ? (
-            <div className="bg-muted rounded-lg p-6 text-center animate-fade-in animate-delay-300">
+            <div className="bg-muted rounded-lg p-6 text-center">
               <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-3 animate-float" />
               <h3 className="font-semibold mb-2 gradient-text">{t.jobs.apply}</h3>
               <p className="text-sm text-muted-foreground mb-4">
@@ -128,7 +128,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
               )}
             </div>
           ) : (
-            <div className="animate-fade-in animate-delay-400">
+            <div>
               <ApplyButton jobId={id} assessmentId={jobAssessment?.id} />
             </div>
           )}
@@ -136,7 +136,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
       </Card>
 
       {company && (
-        <Card className="card-enhanced shadow-brand animate-fade-in animate-delay-500">
+        <Card className="card-enhanced shadow-brand">
           <CardHeader>
             <CardTitle className="gradient-text">{t.jobs.company}</CardTitle>
           </CardHeader>

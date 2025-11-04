@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { AlertCircle, Plus, X, Eye } from "lucide-react"
 import { useApp } from "@/lib/context/app-context"
+import { useTranslation } from "@/lib/i18n/use-translation"
 import CVPreview from "./cv-preview"
 
 interface CVBuilderProps {
@@ -17,6 +18,7 @@ interface CVBuilderProps {
 
 export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
   const { addCV, updateCV } = useApp()
+  const t = useTranslation()
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
   const [showPreview, setShowPreview] = useState(false)
@@ -101,18 +103,43 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
         addCV(cvData)
       }
 
-      alert("تم حفظ السيرة الذاتية بنجاح")
+      alert(t.cv.cvSaved)
     } catch (err: any) {
-      setError(err.message || "فشل حفظ السيرة الذاتية")
+      setError(err.message || t.cv.cvSaveFailed)
     } finally {
       setSaving(false)
     }
   }
 
   const cvData = {
-    personalInfo,
-    education: education.filter((e) => e.degree || e.institution),
-    experience: experience.filter((e) => e.title || e.company),
+    personal_info: {
+      full_name: personalInfo.fullName,
+      email: personalInfo.email,
+      phone: personalInfo.phone,
+      address: personalInfo.address,
+      summary: personalInfo.summary,
+    },
+    education: education
+      .filter((e) => e.degree || e.institution)
+      .map((edu) => ({
+        degree: edu.degree,
+        institution: edu.institution,
+        field: edu.field,
+        start_date: edu.startDate,
+        end_date: edu.endDate,
+        description: edu.description,
+      })),
+    experience: experience
+      .filter((e) => e.title || e.company)
+      .map((exp) => ({
+        title: exp.title,
+        company: exp.company,
+        location: exp.location,
+        start_date: exp.startDate,
+        end_date: exp.endDate,
+        current: exp.current,
+        description: exp.description,
+      })),
     skills: skills.filter((s) => s.trim()),
     languages: languages.filter((l) => l.language),
     certifications: certifications.filter((c) => c.name),
@@ -129,54 +156,54 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
         )}
 
         {/* Personal Info */}
-        <Card>
+        <Card className="card-enhanced hover-lift shadow-brand">
           <CardHeader>
-            <CardTitle>المعلومات الشخصية</CardTitle>
+            <CardTitle className="gradient-text">{t.cv.personalInfo}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>الاسم الكامل *</Label>
+                <Label>{t.cv.fullName} *</Label>
                 <Input
                   value={personalInfo.fullName}
                   onChange={(e) => setPersonalInfo({ ...personalInfo, fullName: e.target.value })}
-                  placeholder="أحمد محمد"
+                  placeholder={t.auth.fullName}
                 />
               </div>
               <div className="space-y-2">
-                <Label>البريد الإلكتروني *</Label>
+                <Label>{t.cv.email} *</Label>
                 <Input
                   type="email"
                   value={personalInfo.email}
                   onChange={(e) => setPersonalInfo({ ...personalInfo, email: e.target.value })}
-                  placeholder="example@email.com"
+                  placeholder={t.auth.email}
                 />
               </div>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>رقم الهاتف *</Label>
+                <Label>{t.cv.phone} *</Label>
                 <Input
                   value={personalInfo.phone}
                   onChange={(e) => setPersonalInfo({ ...personalInfo, phone: e.target.value })}
-                  placeholder="+966501234567"
+                  placeholder={t.cv.phone}
                 />
               </div>
               <div className="space-y-2">
-                <Label>العنوان</Label>
+                <Label>{t.cv.address}</Label>
                 <Input
                   value={personalInfo.address}
                   onChange={(e) => setPersonalInfo({ ...personalInfo, address: e.target.value })}
-                  placeholder="طرابلس، ليبيا"
+                  placeholder={t.cv.address}
                 />
               </div>
             </div>
             <div className="space-y-2">
-              <Label>نبذة مختصرة</Label>
+              <Label>{t.cv.summary}</Label>
               <Textarea
                 value={personalInfo.summary}
                 onChange={(e) => setPersonalInfo({ ...personalInfo, summary: e.target.value })}
-                placeholder="اكتب نبذة مختصرة عنك..."
+                placeholder={t.cv.writeSummary}
                 rows={4}
               />
             </div>
@@ -184,10 +211,10 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
         </Card>
 
         {/* Education */}
-        <Card>
+        <Card className="card-enhanced hover-lift shadow-brand">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>التعليم</CardTitle>
+              <CardTitle className="gradient-text">{t.cv.education}</CardTitle>
               <Button
                 size="sm"
                 variant="outline"
@@ -206,7 +233,7 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
                 }
               >
                 <Plus className="ml-2 h-4 w-4" />
-                إضافة
+                {t.cv.add}
               </Button>
             </div>
           </CardHeader>
@@ -214,7 +241,7 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
             {education.map((edu, index) => (
               <div key={index} className="space-y-4 pb-6 border-b last:border-0">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-semibold">التعليم {index + 1}</h4>
+                  <h4 className="font-semibold">{t.cv.education} {index + 1}</h4>
                   {education.length > 1 && (
                     <Button
                       size="sm"
@@ -227,7 +254,7 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
                 </div>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>الدرجة العلمية</Label>
+                    <Label>{t.cv.degree}</Label>
                     <Input
                       value={edu.degree}
                       onChange={(e) => {
@@ -235,11 +262,11 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
                         newEdu[index].degree = e.target.value
                         setEducation(newEdu)
                       }}
-                      placeholder="بكالوريوس"
+                      placeholder={t.cv.degree}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>المؤسسة التعليمية</Label>
+                    <Label>{t.cv.educationalInstitution}</Label>
                     <Input
                       value={edu.institution}
                       onChange={(e) => {
@@ -247,12 +274,12 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
                         newEdu[index].institution = e.target.value
                         setEducation(newEdu)
                       }}
-                      placeholder="جامعة الملك سعود"
+                      placeholder={t.cv.institution}
                     />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>التخصص</Label>
+                  <Label>{t.cv.field}</Label>
                   <Input
                     value={edu.field}
                     onChange={(e) => {
@@ -260,12 +287,12 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
                       newEdu[index].field = e.target.value
                       setEducation(newEdu)
                     }}
-                    placeholder="علوم الحاسب"
+                    placeholder={t.cv.field}
                   />
                 </div>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>تاريخ البدء</Label>
+                    <Label>{t.cv.startDate}</Label>
                     <Input
                       type="month"
                       value={edu.startDate}
@@ -277,7 +304,7 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>تاريخ الانتهاء</Label>
+                    <Label>{t.cv.endDate}</Label>
                     <Input
                       type="month"
                       value={edu.endDate}
@@ -295,10 +322,10 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
         </Card>
 
         {/* Experience */}
-        <Card>
+        <Card className="card-enhanced hover-lift shadow-brand">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>الخبرات العملية</CardTitle>
+              <CardTitle className="gradient-text">{t.cv.experience}</CardTitle>
               <Button
                 size="sm"
                 variant="outline"
@@ -318,7 +345,7 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
                 }
               >
                 <Plus className="ml-2 h-4 w-4" />
-                إضافة
+                {t.cv.add}
               </Button>
             </div>
           </CardHeader>
@@ -326,7 +353,7 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
             {experience.map((exp, index) => (
               <div key={index} className="space-y-4 pb-6 border-b last:border-0">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-semibold">الخبرة {index + 1}</h4>
+                  <h4 className="font-semibold">{t.cv.experience} {index + 1}</h4>
                   {experience.length > 1 && (
                     <Button
                       size="sm"
@@ -339,7 +366,7 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
                 </div>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>المسمى الوظيفي</Label>
+                    <Label>{t.cv.jobTitle}</Label>
                     <Input
                       value={exp.title}
                       onChange={(e) => {
@@ -347,11 +374,11 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
                         newExp[index].title = e.target.value
                         setExperience(newExp)
                       }}
-                      placeholder="مطور برمجيات"
+                      placeholder={t.cv.jobTitle}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>الشركة</Label>
+                    <Label>{t.cv.company}</Label>
                     <Input
                       value={exp.company}
                       onChange={(e) => {
@@ -359,13 +386,13 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
                         newExp[index].company = e.target.value
                         setExperience(newExp)
                       }}
-                      placeholder="شركة التقنية"
+                      placeholder={t.cv.company}
                     />
                   </div>
                 </div>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>تاريخ البدء</Label>
+                    <Label>{t.cv.startDate}</Label>
                     <Input
                       type="month"
                       value={exp.startDate}
@@ -377,7 +404,7 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>تاريخ الانتهاء</Label>
+                    <Label>{t.cv.endDate}</Label>
                     <Input
                       type="month"
                       value={exp.endDate}
@@ -400,10 +427,10 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
                       setExperience(newExp)
                     }}
                   />
-                  <span className="text-sm">أعمل حالياً في هذه الوظيفة</span>
+                  <span className="text-sm">{t.cv.currentJob}</span>
                 </label>
                 <div className="space-y-2">
-                  <Label>الوصف</Label>
+                  <Label>{t.cv.description}</Label>
                   <Textarea
                     value={exp.description}
                     onChange={(e) => {
@@ -411,7 +438,7 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
                       newExp[index].description = e.target.value
                       setExperience(newExp)
                     }}
-                    placeholder="اكتب وصفاً للمهام والإنجازات..."
+                    placeholder={t.cv.writeDescription}
                     rows={3}
                   />
                 </div>
@@ -421,13 +448,13 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
         </Card>
 
         {/* Skills */}
-        <Card>
+        <Card className="card-enhanced hover-lift shadow-brand">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>المهارات</CardTitle>
+              <CardTitle className="gradient-text">{t.cv.skills}</CardTitle>
               <Button size="sm" variant="outline" onClick={() => setSkills([...skills, ""])}>
                 <Plus className="ml-2 h-4 w-4" />
-                إضافة
+                {t.cv.add}
               </Button>
             </div>
           </CardHeader>
@@ -454,17 +481,17 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
         </Card>
 
         {/* Languages */}
-        <Card>
+        <Card className="card-enhanced hover-lift shadow-brand">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>اللغات</CardTitle>
+              <CardTitle className="gradient-text">{t.cv.languages}</CardTitle>
               <Button
                 size="sm"
                 variant="outline"
                 onClick={() => setLanguages([...languages, { language: "", proficiency: "" }])}
               >
                 <Plus className="ml-2 h-4 w-4" />
-                إضافة
+                {t.cv.add}
               </Button>
             </div>
           </CardHeader>
@@ -478,7 +505,7 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
                     newLangs[index].language = e.target.value
                     setLanguages(newLangs)
                   }}
-                  placeholder="اللغة"
+                  placeholder={t.cv.languages}
                   className="flex-1"
                 />
                 <select
@@ -490,11 +517,11 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
                   }}
                   className="px-3 py-2 border border-input rounded-md bg-background"
                 >
-                  <option value="">المستوى</option>
-                  <option value="مبتدئ">مبتدئ</option>
-                  <option value="متوسط">متوسط</option>
-                  <option value="متقدم">متقدم</option>
-                  <option value="لغة أم">لغة أم</option>
+                  <option value="">{t.cv.selectLevel}</option>
+                  <option value={t.cv.beginner}>{t.cv.beginner}</option>
+                  <option value={t.cv.intermediate}>{t.cv.intermediate}</option>
+                  <option value={t.cv.advanced}>{t.cv.advanced}</option>
+                  <option value={t.cv.native}>{t.cv.native}</option>
                 </select>
                 {languages.length > 1 && (
                   <Button
@@ -511,10 +538,10 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
         </Card>
 
         {/* Certifications */}
-        <Card>
+        <Card className="card-enhanced hover-lift shadow-brand">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>الشهادات</CardTitle>
+              <CardTitle className="gradient-text">{t.cv.certifications}</CardTitle>
               <Button
                 size="sm"
                 variant="outline"
@@ -531,7 +558,7 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
                 }
               >
                 <Plus className="ml-2 h-4 w-4" />
-                إضافة
+                {t.cv.add}
               </Button>
             </div>
           </CardHeader>
@@ -539,7 +566,7 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
             {certifications.map((cert, index) => (
               <div key={index} className="space-y-4 pb-6 border-b last:border-0">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-semibold">الشهادة {index + 1}</h4>
+                  <h4 className="font-semibold">{t.cv.certifications} {index + 1}</h4>
                   {certifications.length > 1 && (
                     <Button
                       size="sm"
@@ -552,7 +579,7 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
                 </div>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>اسم الشهادة</Label>
+                    <Label>{t.cv.name}</Label>
                     <Input
                       value={cert.name}
                       onChange={(e) => {
@@ -560,11 +587,11 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
                         newCerts[index].name = e.target.value
                         setCertifications(newCerts)
                       }}
-                      placeholder="شهادة AWS"
+                      placeholder={t.cv.name}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>الجهة المانحة</Label>
+                    <Label>{t.cv.issuer}</Label>
                     <Input
                       value={cert.issuer}
                       onChange={(e) => {
@@ -572,12 +599,12 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
                         newCerts[index].issuer = e.target.value
                         setCertifications(newCerts)
                       }}
-                      placeholder="Amazon"
+                      placeholder={t.cv.issuer}
                     />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>تاريخ الحصول</Label>
+                  <Label>{t.cv.date}</Label>
                   <Input
                     type="month"
                     value={cert.date}
@@ -594,21 +621,21 @@ export default function CVBuilder({ initialData, userId }: CVBuilderProps) {
         </Card>
 
         <div className="flex gap-3">
-          <Button onClick={handleSave} disabled={saving} className="flex-1">
-            {saving ? "جاري الحفظ..." : "حفظ السيرة الذاتية"}
+          <Button onClick={handleSave} disabled={saving} className="flex-1 btn-enhanced hover-lift shadow-brand">
+            {saving ? t.cv.saving : t.cv.saveCV}
           </Button>
         </div>
       </div>
 
       {/* Preview Sidebar */}
       <div className="lg:sticky lg:top-24 h-fit space-y-4">
-        <Button variant="outline" className="w-full bg-transparent" onClick={() => setShowPreview(!showPreview)}>
+        <Button variant="outline" className="w-full bg-transparent btn-enhanced hover-lift" onClick={() => setShowPreview(!showPreview)}>
           <Eye className="ml-2 h-4 w-4" />
-          {showPreview ? "إخفاء المعاينة" : "معاينة"}
+          {showPreview ? t.cv.hidePreview : t.cv.showPreview}
         </Button>
 
         {showPreview && (
-          <Card className="overflow-hidden">
+          <Card className="card-enhanced shadow-brand overflow-hidden">
             <CardContent className="p-0">
               <CVPreview data={cvData} />
             </CardContent>

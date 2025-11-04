@@ -1,44 +1,120 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Briefcase, Users, FileText, Award } from "lucide-react"
+import { Briefcase, Users, FileText, Award, Menu } from "lucide-react"
 import { useTranslation } from "@/lib/i18n/use-translation"
 import { LanguageSwitcher } from "@/components/language-switcher"
 import { PlatformLogo } from "@/components/platform-logo"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 
 export default function HomePage() {
   const t = useTranslation()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 page-transition">
       {/* Header */}
       <header className="border-b glass sticky top-0 z-50 shadow-brand backdrop-blur-md animate-fade-in">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2 animate-slide-in">
-            <PlatformLogo showTitle={false} size="xl" className="hover-lift" />
+          <div className="flex items-center gap-2">
+            <PlatformLogo showTitle={false} size="xl" />
           </div>
           <div className="flex items-center gap-3 animate-slide-in-right">
             <LanguageSwitcher />
-            <Link href="/login">
-              <Button variant="ghost" className="btn-enhanced">{t.common.login}</Button>
-            </Link>
-            <Link href="/register">
-              <Button className="btn-enhanced">{t.common.register}</Button>
-            </Link>
+            <div className="hidden md:flex items-center gap-3">
+              <Link href="/login">
+                <Button variant="ghost" className="btn-enhanced">{t.common.login}</Button>
+              </Link>
+              <Link href="/register">
+                <Button className="btn-enhanced">{t.common.register}</Button>
+              </Link>
+            </div>
+            
+            {/* Mobile Menu */}
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="md:hidden">
+                  <Menu className="h-5 w-5" />
+                  <span className="sr-only">Toggle menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                <SheetHeader className="pb-4 border-b">
+                  <SheetTitle className="flex items-center gap-2">
+                    <PlatformLogo showTitle={false} size="md" />
+                    {t.home.platformTitle}
+                  </SheetTitle>
+                </SheetHeader>
+                <div className="mt-6 flex flex-col gap-4">
+                  <nav className="flex flex-col gap-2">
+                    <Link
+                      href="/login"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center justify-center px-4 py-2.5 rounded-md border hover:bg-muted transition-colors"
+                    >
+                      <span className="font-medium">{t.common.login}</span>
+                    </Link>
+                    <Link
+                      href="/register"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center justify-center px-4 py-2.5 rounded-md bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
+                    >
+                      <span className="font-medium">{t.common.register}</span>
+                    </Link>
+                  </nav>
+                  <div className="mt-4 pt-4 border-t flex flex-col gap-2">
+                    <div className="px-3">
+                      <LanguageSwitcher />
+                    </div>
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 text-center section-spacing">
-        <h2 className="text-5xl font-bold mb-6 text-balance gradient-text-animated animate-fade-in animate-delay-100 leading-[1.3] pb-2 arabic-text">
-          {t.home.platformTitle}
-        </h2>
-        <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto text-pretty animate-fade-in animate-delay-200">
-          {t.home.description}
-        </p>
+        <div className="mb-6">
+          <h1 className="text-6xl md:text-7xl font-bold mb-4 text-secondary leading-tight">
+            {t.home.platformTitle}
+          </h1>
+          <p className="text-2xl md:text-3xl font-bold text-foreground mb-8 max-w-2xl mx-auto">
+            {(() => {
+              const subtitle = t.home.subtitle
+              // For Arabic, check if it contains "الفرص" and highlight it
+              if (subtitle.includes("الفرص")) {
+                const parts = subtitle.split("الفرص")
+                return (
+                  <>
+                    {parts[0]}
+                    <span className="text-primary bg-secondary px-2 py-1 rounded">الفرص</span>
+                    {parts.slice(1).join("")}
+                  </>
+                )
+              }
+              // For English, highlight "opportunities"
+              if (subtitle.toLowerCase().includes("opportunities")) {
+                const parts = subtitle.split(/(opportunities)/i)
+                return parts.map((part, index) => 
+                  part.toLowerCase() === "opportunities" ? (
+                    <span key={index} className="text-primary bg-secondary px-2 py-1 rounded">{part}</span>
+                  ) : (
+                    <span key={index}>{part}</span>
+                  )
+                )
+              }
+              return subtitle
+            })()}
+          </p>
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto text-pretty">
+            {t.home.description}
+          </p>
+        </div>
         <div className="flex items-center justify-center gap-4 animate-fade-in animate-delay-300">
           <Link href="/register?role=company">
             <Button size="lg" className="text-lg btn-enhanced hover-lift shadow-brand">
@@ -55,7 +131,9 @@ export default function HomePage() {
 
       {/* Features Section */}
       <section className="container mx-auto px-4 py-16 section-spacing">
-        <h3 className="text-3xl font-bold text-center mb-12 gradient-text animate-fade-in">{t.home.features}</h3>
+        <div className="flex justify-center mb-12 w-full">
+          <h3 className="text-3xl font-bold gradient-text animate-fade-in features-heading">{t.home.features}</h3>
+        </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card className="p-6 text-center card-enhanced hover-lift animate-fade-in animate-delay-100">
             <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 animate-float">

@@ -56,7 +56,7 @@ export function PlatformLogo({ showTitle = true, size = "md", className = "" }: 
           alt={t.home.platformTitle}
           width={imageSizes[displayImageSize]}
           height={imageSizes[displayImageSize]}
-          className={`${sizeClasses[displaySize]} object-contain animate-float`}
+          className={`${sizeClasses[displaySize]} object-contain`}
           onError={() => {
             if (!logoError) {
               setLogoError(true)

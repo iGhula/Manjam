@@ -35,7 +35,7 @@ export default function ApplyButton({ jobId, assessmentId }: ApplyButtonProps) {
       }
 
       // Create submission
-      const submission = addSubmission({
+      const submissionId = addSubmission({
         jobId,
         userId: currentUser.id,
         assessmentId: jobAssessment?.id || assessmentId || "",
@@ -44,9 +44,12 @@ export default function ApplyButton({ jobId, assessmentId }: ApplyButtonProps) {
         answers: [],
       })
 
+      // Wait a bit to ensure state is updated and localStorage is saved
+      await new Promise(resolve => setTimeout(resolve, 100))
+
       // Redirect to assessment if there is one, otherwise show success
       if (jobAssessment) {
-        router.push(`/candidate/assessments/${submission.id}`)
+        router.push(`/candidate/assessments/${submissionId}`)
       } else {
         router.push("/candidate/applications")
       }

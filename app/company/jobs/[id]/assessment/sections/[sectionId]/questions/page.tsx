@@ -70,7 +70,7 @@ export default function SectionQuestionsPage({
           {sectionQuestions
             .sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0))
             .map((question, index) => (
-              <Card key={question.id} className="card-enhanced hover-lift shadow-brand animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+              <Card key={question.id} className="card-enhanced hover-lift shadow-brand">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">

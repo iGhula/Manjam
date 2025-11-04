@@ -25,10 +25,10 @@ export default function JobDetailsPage({ params }: { params: Promise<{ id: strin
 
   return (
     <div className="space-y-6 section-spacing page-transition">
-      <div className="flex items-start justify-between animate-fade-in">
+      <div className="flex items-start justify-between">
         <div>
           <h1 className="text-3xl font-bold mb-2 gradient-text">{job.title}</h1>
-          <div className="flex items-center gap-4 text-muted-foreground animate-fade-in animate-delay-100">
+          <div className="flex items-center gap-4 text-muted-foreground">
             {job.location && (
               <div className="flex items-center gap-1">
                 <MapPin className="h-4 w-4" />
@@ -49,7 +49,7 @@ export default function JobDetailsPage({ params }: { params: Promise<{ id: strin
             )}
           </div>
         </div>
-        <div className="flex items-center gap-3 animate-fade-in animate-delay-200">
+        <div className="flex items-center gap-3">
           <Badge
             variant={job.status === "active" ? "default" : "secondary"}
             className={job.status === "active" ? "bg-success text-success-foreground" : ""}
@@ -66,7 +66,7 @@ export default function JobDetailsPage({ params }: { params: Promise<{ id: strin
       </div>
 
       <div className="grid md:grid-cols-3 gap-6">
-        <Card className="md:col-span-2 card-enhanced shadow-brand animate-fade-in animate-delay-300">
+        <Card className="md:col-span-2 card-enhanced shadow-brand">
           <CardHeader>
             <CardTitle className="gradient-text">{t.jobs.jobDetails}</CardTitle>
           </CardHeader>
@@ -85,21 +85,21 @@ export default function JobDetailsPage({ params }: { params: Promise<{ id: strin
         </Card>
 
         <div className="space-y-6">
-          <Card className="card-enhanced shadow-brand animate-fade-in animate-delay-400">
+          <Card className="card-enhanced shadow-brand">
             <CardHeader>
               <CardTitle className="text-lg gradient-text">{t.dashboard.statistics}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <Users className="h-4 w-4 animate-float" />
+                  <Users className="h-4 w-4" />
                   <span>{t.dashboard.totalApplicants}</span>
                 </div>
                 <span className="font-bold text-lg">{jobSubmissions.length}</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <FileText className="h-4 w-4 animate-float" style={{ animationDelay: '0.5s' }} />
+                  <FileText className="h-4 w-4" />
                   <span>{t.dashboard.pendingApplications}</span>
                 </div>
                 <span className="font-bold text-lg">
@@ -110,7 +110,7 @@ export default function JobDetailsPage({ params }: { params: Promise<{ id: strin
           </Card>
 
           <Link href={`/company/jobs/${job.id}/assessment`}>
-            <Button className="w-full btn-enhanced hover-lift shadow-brand animate-fade-in animate-delay-500" size="lg">
+            <Button className="w-full btn-enhanced hover-lift shadow-brand" size="lg">
               {t.assessments.createAssessment}
             </Button>
           </Link>
@@ -118,7 +118,7 @@ export default function JobDetailsPage({ params }: { params: Promise<{ id: strin
       </div>
 
       {/* Submissions List */}
-      <Card className="card-enhanced shadow-brand animate-fade-in animate-delay-600">
+      <Card className="card-enhanced shadow-brand">
         <CardHeader>
           <CardTitle className="gradient-text">{t.nav.submissions}</CardTitle>
         </CardHeader>
@@ -131,20 +131,43 @@ export default function JobDetailsPage({ params }: { params: Promise<{ id: strin
                   <Link
                     key={submission.id}
                     href={`/company/submissions/${submission.id}`}
-                    className="block p-4 rounded-lg border hover:border-primary hover:shadow-brand transition-all hover-lift animate-fade-in"
-                    style={{ animationDelay: `${index * 100}ms` }}
+                    className="block p-4 rounded-lg border hover:border-primary hover:shadow-brand transition-all hover-lift"
                   >
                     <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="font-semibold">{candidate?.fullName}</h4>
-                        <p className="text-sm text-muted-foreground">{candidate?.email}</p>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-lg">{candidate?.fullName || "Unknown"}</h4>
+                        <p className="text-sm text-muted-foreground">{candidate?.email || "No email"}</p>
+                        {submission.totalScore !== null && submission.totalScore !== undefined && submission.maxScore && (
+                          <p className="text-sm font-medium mt-2">
+                            {t.assessments.passingScore}: {submission.totalScore}/{submission.maxScore} ({Math.round((submission.totalScore / submission.maxScore) * 100)}%)
+                          </p>
+                        )}
                       </div>
-                      <div className="text-left">
+                      <div className="text-left space-y-2">
                         <Badge variant={submission.status === "submitted" ? "default" : "secondary"}>
                           {submission.status === "submitted" ? t.applications.submitted : t.applications.inProgress}
                         </Badge>
-                        {submission.totalScore !== null && submission.totalScore !== undefined && (
-                          <p className="text-sm font-medium mt-1">{t.assessments.passingScore}: {submission.totalScore}</p>
+                        {submission.decision && (
+                          <Badge
+                            variant={
+                              submission.decision === "accepted"
+                                ? "default"
+                                : submission.decision === "rejected"
+                                  ? "destructive"
+                                  : "secondary"
+                            }
+                            className={
+                              submission.decision === "accepted" ? "bg-success text-success-foreground block" : "block"
+                            }
+                          >
+                            {submission.decision === "accepted"
+                              ? t.applications.accepted
+                              : submission.decision === "rejected"
+                                ? t.applications.rejected
+                                : submission.decision === "shortlisted"
+                                  ? t.applications.shortlisted
+                                  : t.applications.pending}
+                          </Badge>
                         )}
                       </div>
                     </div>
@@ -154,7 +177,7 @@ export default function JobDetailsPage({ params }: { params: Promise<{ id: strin
             </div>
           ) : (
             <div className="text-center py-12 text-muted-foreground">
-              <Users className="h-12 w-12 mx-auto mb-3 opacity-50 animate-float" />
+              <Users className="h-12 w-12 mx-auto mb-3 opacity-50" />
               <p>{t.dashboard.noApplicationsYet}</p>
             </div>
           )}

@@ -28,7 +28,7 @@ export default function CandidateJobsPage() {
             const company = users.find((u) => u.id === job.companyId)
             const jobAssessment = assessments.find((a) => a.jobId === job.id)
             return (
-              <Card key={job.id} className="card-enhanced hover-lift shadow-brand animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+              <Card key={job.id} className="card-enhanced hover-lift shadow-brand">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-start gap-4 flex-1">

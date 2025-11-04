@@ -24,13 +24,13 @@ export default function CompanyDashboardPage() {
 
   return (
     <div className="space-y-6 section-spacing page-transition">
-      <div className="flex items-center justify-between animate-fade-in">
+      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold gradient-text">{t.dashboard.controlPanel}</h1>
-          <p className="text-muted-foreground animate-fade-in animate-delay-100">{t.dashboard.welcomeMessage} {currentUser.companyName}</p>
+          <p className="text-muted-foreground">{t.dashboard.welcomeMessage} {currentUser.companyName}</p>
         </div>
         <Link href="/company/jobs/new">
-          <Button size="lg" className="btn-enhanced hover-lift shadow-brand animate-fade-in animate-delay-200">
+          <Button size="lg" className="btn-enhanced hover-lift shadow-brand">
             <Plus className="ml-2 h-5 w-5" />
             {t.dashboard.addNewJob}
           </Button>
@@ -39,7 +39,7 @@ export default function CompanyDashboardPage() {
 
       {/* Stats Cards */}
       <div className="grid md:grid-cols-3 gap-6">
-        <Card className="card-enhanced hover-lift animate-fade-in animate-delay-100">
+        <Card className="card-enhanced hover-lift">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">{t.dashboard.totalJobs}</CardTitle>
             <Briefcase className="h-5 w-5 text-primary animate-float" />
@@ -49,20 +49,20 @@ export default function CompanyDashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="card-enhanced hover-lift animate-fade-in animate-delay-200">
+        <Card className="card-enhanced hover-lift">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">{t.dashboard.totalApplicants}</CardTitle>
-            <Users className="h-5 w-5 text-primary animate-float" style={{ animationDelay: '0.5s' }} />
+            <Users className="h-5 w-5 text-primary animate-float" />
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">{companySubmissions.length}</div>
           </CardContent>
         </Card>
 
-        <Card className="card-enhanced hover-lift animate-fade-in animate-delay-300">
+        <Card className="card-enhanced hover-lift">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">{t.dashboard.activeJobs}</CardTitle>
-            <FileText className="h-5 w-5 text-primary animate-float" style={{ animationDelay: '1s' }} />
+            <FileText className="h-5 w-5 text-primary animate-float" />
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">{companyJobs.filter((j) => j.status === "active").length}</div>
@@ -71,7 +71,7 @@ export default function CompanyDashboardPage() {
       </div>
 
       {/* Recent Jobs */}
-      <Card className="card-enhanced shadow-brand animate-fade-in animate-delay-400">
+      <Card className="card-enhanced shadow-brand">
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="gradient-text">{t.dashboard.recentJobs}</CardTitle>
@@ -91,8 +91,7 @@ export default function CompanyDashboardPage() {
                   <Link
                     key={job.id}
                     href={`/company/jobs/${job.id}`}
-                    className="block p-4 rounded-lg border hover:border-primary hover:shadow-brand transition-all hover-lift animate-fade-in"
-                    style={{ animationDelay: `${(index + 1) * 100}ms` }}
+                    className="block p-4 rounded-lg border hover:border-primary hover:shadow-brand transition-all hover-lift"
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -107,8 +106,8 @@ export default function CompanyDashboardPage() {
                       <div className="text-left mr-4">
                         <div className="text-sm font-medium">{jobSubmissions.length} {t.dashboard.applicant}</div>
                         <div
-                          className={`text-xs px-2 py-1 rounded-full mt-1 ${
-                            job.status === "active" ? "bg-success/10 text-success" : "bg-muted text-muted-foreground"
+                          className={`text-xs px-2 py-1 rounded-full mt-1 font-medium ${
+                            job.status === "active" ? "bg-success/10 text-green-700 dark:text-green-400" : "bg-muted text-muted-foreground"
                           }`}
                         >
                           {job.status === "active" ? t.jobs.active : job.status === "closed" ? t.jobs.closed : t.jobs.draft}

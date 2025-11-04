@@ -25,6 +25,8 @@ export interface Translations {
     close: string
     yes: string
     no: string
+    unknown: string
+    noEmail: string
   }
 
   // Navigation
@@ -39,6 +41,7 @@ export interface Translations {
     submissions: string
     adminDashboard: string
     resume: string
+    selfAssessment: string
   }
 
   // Home Page
@@ -119,9 +122,11 @@ export interface Translations {
     browseAvailableJobs: string
     totalApplicants: string
     noJobsYet: string
-    startAddingJobs: string
-    applicant: string
-    applicants: string
+      startAddingJobs: string
+      applicant: string
+      applicants: string
+      reviewSubmissions: string
+      allSubmissions: string
   }
 
   // Jobs
@@ -151,6 +156,7 @@ export interface Translations {
     jobDetails: string
     industry: string
     size: string
+    company: string
   }
 
   // Assessments
@@ -159,7 +165,8 @@ export interface Translations {
     description: string
     timeLimit: string
     minutes: string
-    passingScore: string
+      passingScore: string
+      score: string
     createAssessment: string
     editAssessment: string
       sections: string
@@ -212,8 +219,79 @@ export interface Translations {
     issuer: string
     date: string
     buildCV: string
+    buildCVDesc: string
     preview: string
     download: string
+    fullName: string
+    email: string
+    educationalInstitution: string
+    field: string
+    currentJob: string
+    description: string
+    add: string
+    saveCV: string
+    saving: string
+    showPreview: string
+    hidePreview: string
+    cvSaved: string
+    cvSaveFailed: string
+    writeSummary: string
+    writeDescription: string
+    proficiency: string
+    beginner: string
+    intermediate: string
+    advanced: string
+    native: string
+    selectLevel: string
+  }
+
+  // Self Assessment
+  selfAssessment: {
+    title: string
+    description: string
+    startAssessment: string
+    takeAssessment: string
+    optional: string
+    intro: string
+    introDescription: string
+    question: string
+    of: string
+    next: string
+    previous: string
+    submit: string
+    calculating: string
+    recommendations: string
+    recommendedPositions: string
+    recommendedCourses: string
+    noRecommendations: string
+    viewJobs: string
+    viewCourses: string
+    skills: string
+    interests: string
+    experience: string
+    education: string
+    programming: string
+    design: string
+    marketing: string
+    sales: string
+    management: string
+    data: string
+    beginner: string
+    intermediate: string
+    advanced: string
+    years: string
+      courses: string
+      noCourses: string
+      noPositions: string
+      whatAreYourSkills: string
+      whatAreYourInterests: string
+      whatIsYourExperience: string
+      whatIsYourEducation: string
+      howManyYears: string
+      highSchool: string
+      bachelorsDegree: string
+      mastersDegree: string
+      phd: string
   }
 
   // Applications
@@ -277,6 +355,8 @@ export const translations: Record<Language, Translations> = {
       close: "إغلاق",
       yes: "نعم",
       no: "لا",
+      unknown: "غير معروف",
+      noEmail: "لا يوجد بريد إلكتروني",
     },
     nav: {
       dashboard: "لوحة التحكم",
@@ -289,11 +369,12 @@ export const translations: Record<Language, Translations> = {
       submissions: "المتقدمين",
       adminDashboard: "لوحة تحكم المدير",
       resume: "السيرة الذاتية",
+      selfAssessment: "التقييم الذاتي",
     },
     home: {
       title: "منصة التوظيف",
       platformTitle: "منجم",
-      subtitle: "منصة التوظيف الذكية",
+      subtitle: "للمواهب والفرص",
       description: "نربط بين الشركات والمواهب من خلال نظام تقييم شامل ومتطور",
       forCompanies: "للشركات",
       forJobSeekers: "للباحثين عن عمل",
@@ -370,6 +451,8 @@ export const translations: Record<Language, Translations> = {
       startAddingJobs: "ابدأ بإضافة وظيفة جديدة لاستقبال المتقدمين",
       applicant: "متقدم",
       applicants: "متقدم",
+      reviewSubmissions: "راجع وقيّم طلبات المتقدمين",
+      allSubmissions: "جميع الطلبات",
     },
     jobs: {
       title: "العنوان",
@@ -397,6 +480,8 @@ export const translations: Record<Language, Translations> = {
       jobDetails: "تفاصيل الوظيفة",
       industry: "الصناعة",
       size: "حجم الشركة",
+      company: "الشركة",
+      job: "الوظيفة",
     },
     assessments: {
       title: "عنوان التقييم",
@@ -404,7 +489,8 @@ export const translations: Record<Language, Translations> = {
       timeLimit: "الوقت المحدد",
       minutes: "دقيقة",
       passingScore: "الدرجة المطلوبة",
-      createAssessment: "إنشاء تقييم",
+      score: "النتيجة",
+    createAssessment: "إنشاء تقييم",
       editAssessment: "تعديل التقييم",
       sections: "الأقسام",
       questions: "الأسئلة",
@@ -432,6 +518,19 @@ export const translations: Record<Language, Translations> = {
       manualReview: "إذا لم تضيف حالات اختبار، سيتم مراجعة الإجابة يدوياً.",
       allQuestionsRequired: "يجب الإجابة على جميع الأسئلة قبل الإرسال",
       cannotEditAfterSubmit: "لن تتمكن من التعديل بعد الإرسال",
+      cheatingDetectionTitle: "نظام كشف الغش",
+      cheatingDetectionWarning: "تحذير: نظام كشف الغش مفعل",
+      cheatingDetectionInfo: "سيتم مراقبة نشاطك أثناء التقييم. إذا تم اكتشاف أي من السلوكيات التالية، سيتم إرسال التقييم تلقائياً حتى لو لم تنهيه:",
+      cheatingDetectionList1: "فتح تبويب آخر في المتصفح",
+      cheatingDetectionList2: "التبديل إلى نافذة أخرى",
+      cheatingDetectionList3: "التبديل إلى تطبيق آخر",
+      cheatingDetectionList4: "فقدان التركيز على صفحة التقييم",
+      cheatingDetectionAgreement: "أوافق على هذه الشروط وأفهم أن التقييم سيتم إرساله تلقائياً إذا تم اكتشاف أي نشاط مشبوه",
+      cheatingDetected: "تم اكتشاف نشاط مشبوه",
+      cheatingDetectedMessage: "تم اكتشاف أنك قمت بفتح تبويب آخر أو التبديل إلى تطبيق آخر. تم إرسال التقييم تلقائياً.",
+      cheatingWarningNotice: "تنبيه: نظام كشف الغش مفعل. أي تغيير في التبويب أو النافذة سيؤدي إلى إرسال التقييم تلقائياً.",
+      agreeAndStart: "أوافق وأبدأ التقييم",
+      iAgree: "أوافق",
     },
     cv: {
       personalInfo: "المعلومات الشخصية",
@@ -454,8 +553,77 @@ export const translations: Record<Language, Translations> = {
       issuer: "المصدر",
       date: "التاريخ",
       buildCV: "بناء السيرة الذاتية",
+      buildCVDesc: "أنشئ سيرتك الذاتية واحصل على ملف PDF احترافي",
       preview: "معاينة",
       download: "تحميل",
+      fullName: "الاسم الكامل",
+      email: "البريد الإلكتروني",
+      educationalInstitution: "المؤسسة التعليمية",
+      field: "التخصص",
+      currentJob: "أعمل حالياً في هذه الوظيفة",
+      description: "الوصف",
+      add: "إضافة",
+      saveCV: "حفظ السيرة الذاتية",
+      saving: "جاري الحفظ...",
+      showPreview: "معاينة",
+      hidePreview: "إخفاء المعاينة",
+      cvSaved: "تم حفظ السيرة الذاتية بنجاح",
+      cvSaveFailed: "فشل حفظ السيرة الذاتية",
+      writeSummary: "اكتب نبذة مختصرة عنك...",
+      writeDescription: "اكتب وصفاً للمهام والإنجازات...",
+      proficiency: "المستوى",
+      beginner: "مبتدئ",
+      intermediate: "متوسط",
+      advanced: "متقدم",
+      native: "لغة أم",
+      selectLevel: "المستوى",
+    },
+    selfAssessment: {
+      title: "التقييم الذاتي",
+      description: "قيم نفسك واحصل على توصيات مخصصة للوظائف والدورات",
+      startAssessment: "بدء التقييم",
+      takeAssessment: "أخذ التقييم الذاتي",
+      optional: "اختياري",
+      intro: "مرحباً بك في التقييم الذاتي",
+      introDescription: "سيساعدك هذا التقييم على اكتشاف أفضل الوظائف والدورات المناسبة لمهاراتك واهتماماتك. سوف يستغرق حوالي 5 دقائق.",
+      question: "سؤال",
+      of: "من",
+      next: "التالي",
+      previous: "السابق",
+      submit: "إرسال",
+      calculating: "جاري حساب التوصيات...",
+      recommendations: "توصياتنا لك",
+      recommendedPositions: "الوظائف الموصى بها",
+      recommendedCourses: "الدورات الموصى بها",
+      noRecommendations: "لا توجد توصيات متاحة حالياً",
+      viewJobs: "عرض الوظائف",
+      viewCourses: "عرض الدورات",
+      skills: "المهارات",
+      interests: "الاهتمامات",
+      experience: "الخبرة",
+      education: "التعليم",
+      programming: "البرمجة",
+      design: "التصميم",
+      marketing: "التسويق",
+      sales: "المبيعات",
+      management: "الإدارة",
+      data: "البيانات",
+      beginner: "مبتدئ",
+      intermediate: "متوسط",
+      advanced: "متقدم",
+      years: "سنوات",
+      courses: "الدورات",
+      noCourses: "لا توجد دورات متاحة حالياً",
+      noPositions: "لا توجد وظائف متاحة حالياً",
+      whatAreYourSkills: "ما هي مهاراتك الرئيسية",
+      whatAreYourInterests: "ما هي اهتماماتك الرئيسية",
+      whatIsYourExperience: "ما هو مستوى خبرتك",
+      whatIsYourEducation: "ما هو مستواك التعليمي",
+      howManyYears: "كم سنة من الخبرة المهنية لديك",
+      highSchool: "ثانوية عامة",
+      bachelorsDegree: "بكالوريوس",
+      mastersDegree: "ماجستير",
+      phd: "دكتوراه",
     },
     applications: {
       myApplications: "طلباتي",
@@ -511,6 +679,8 @@ export const translations: Record<Language, Translations> = {
       close: "Close",
       yes: "Yes",
       no: "No",
+      unknown: "Unknown",
+      noEmail: "No email",
     },
     nav: {
       dashboard: "Dashboard",
@@ -527,7 +697,7 @@ export const translations: Record<Language, Translations> = {
     home: {
       title: "Job Platform",
       platformTitle: "Manjam",
-      subtitle: "Smart Job Platform",
+      subtitle: "A mine of talent and opportunities",
       description: "Connecting companies and talents through a comprehensive and advanced evaluation system",
       forCompanies: "For Companies",
       forJobSeekers: "For Job Seekers",
@@ -604,6 +774,8 @@ export const translations: Record<Language, Translations> = {
       startAddingJobs: "Start by adding a new job to receive applicants",
       applicant: "applicant",
       applicants: "applicants",
+      reviewSubmissions: "Review and evaluate applicant submissions",
+      allSubmissions: "All Submissions",
     },
     jobs: {
       title: "Title",
@@ -631,6 +803,8 @@ export const translations: Record<Language, Translations> = {
       jobDetails: "Job Details",
       industry: "Industry",
       size: "Company Size",
+      company: "Company",
+      job: "Job",
     },
     assessments: {
       title: "Assessment Title",
@@ -638,7 +812,8 @@ export const translations: Record<Language, Translations> = {
       timeLimit: "Time Limit",
       minutes: "minutes",
       passingScore: "Passing Score",
-      createAssessment: "Create Assessment",
+      score: "Score",
+    createAssessment: "Create Assessment",
       editAssessment: "Edit Assessment",
       sections: "Sections",
       questions: "Questions",
@@ -666,6 +841,19 @@ export const translations: Record<Language, Translations> = {
       manualReview: "If you don't add test cases, the answer will be reviewed manually.",
       allQuestionsRequired: "You must answer all questions before submitting",
       cannotEditAfterSubmit: "You cannot edit after submitting",
+      cheatingDetectionTitle: "Cheating Detection System",
+      cheatingDetectionWarning: "Warning: Cheating Detection is Active",
+      cheatingDetectionInfo: "Your activity will be monitored during the assessment. If any of the following behaviors are detected, the assessment will be automatically submitted even if you haven't finished:",
+      cheatingDetectionList1: "Opening another browser tab",
+      cheatingDetectionList2: "Switching to another window",
+      cheatingDetectionList3: "Switching to another application",
+      cheatingDetectionList4: "Losing focus on the assessment page",
+      cheatingDetectionAgreement: "I agree to these terms and understand that the assessment will be automatically submitted if any suspicious activity is detected",
+      cheatingDetected: "Suspicious Activity Detected",
+      cheatingDetectedMessage: "It has been detected that you opened another tab or switched to another application. The assessment has been automatically submitted.",
+      cheatingWarningNotice: "Warning: Cheating detection is active. Any tab or window change will automatically submit the assessment.",
+      agreeAndStart: "I Agree and Start Assessment",
+      iAgree: "I Agree",
     },
     cv: {
       personalInfo: "Personal Information",
@@ -688,8 +876,77 @@ export const translations: Record<Language, Translations> = {
       issuer: "Issuer",
       date: "Date",
       buildCV: "Build Resume",
+      buildCVDesc: "Create your resume and get a professional PDF file",
       preview: "Preview",
       download: "Download",
+      fullName: "Full Name",
+      email: "Email",
+      educationalInstitution: "Educational Institution",
+      field: "Field",
+      currentJob: "I currently work in this position",
+      description: "Description",
+      add: "Add",
+      saveCV: "Save Resume",
+      saving: "Saving...",
+      showPreview: "Preview",
+      hidePreview: "Hide Preview",
+      cvSaved: "Resume saved successfully",
+      cvSaveFailed: "Failed to save resume",
+      writeSummary: "Write a brief summary about yourself...",
+      writeDescription: "Write a description of tasks and achievements...",
+      proficiency: "Proficiency",
+      beginner: "Beginner",
+      intermediate: "Intermediate",
+      advanced: "Advanced",
+      native: "Native",
+      selectLevel: "Level",
+    },
+    selfAssessment: {
+      title: "Self Assessment",
+      description: "Assess yourself and get personalized job and course recommendations",
+      startAssessment: "Start Assessment",
+      takeAssessment: "Take Self Assessment",
+      optional: "Optional",
+      intro: "Welcome to Self Assessment",
+      introDescription: "This assessment will help you discover the best jobs and courses that match your skills and interests. It will take about 5 minutes.",
+      question: "Question",
+      of: "of",
+      next: "Next",
+      previous: "Previous",
+      submit: "Submit",
+      calculating: "Calculating recommendations...",
+      recommendations: "Our Recommendations for You",
+      recommendedPositions: "Recommended Positions",
+      recommendedCourses: "Recommended Courses",
+      noRecommendations: "No recommendations available at the moment",
+      viewJobs: "View Jobs",
+      viewCourses: "View Courses",
+      skills: "Skills",
+      interests: "Interests",
+      experience: "Experience",
+      education: "Education",
+      programming: "Programming",
+      design: "Design",
+      marketing: "Marketing",
+      sales: "Sales",
+      management: "Management",
+      data: "Data",
+      beginner: "Beginner",
+      intermediate: "Intermediate",
+      advanced: "Advanced",
+      years: "years",
+      courses: "Courses",
+      noCourses: "No courses available at the moment",
+      noPositions: "No positions available at the moment",
+      whatAreYourSkills: "What are your main skills",
+      whatAreYourInterests: "What are your main interests",
+      whatIsYourExperience: "What is your experience level",
+      whatIsYourEducation: "What is your education level",
+      howManyYears: "How many years of professional experience do you have",
+      highSchool: "High School",
+      bachelorsDegree: "Bachelor's Degree",
+      mastersDegree: "Master's Degree",
+      phd: "PhD",
     },
     applications: {
       myApplications: "My Applications",

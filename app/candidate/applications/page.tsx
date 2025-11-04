@@ -28,11 +28,11 @@ export default function ApplicationsPage() {
           {userSubmissions.map((submission, index) => {
             const job = jobs.find((j) => j.id === submission.jobId)
             const company = users.find((u) => u.id === job?.companyId)
-            const scorePercentage = submission.totalScore !== null && submission.maxScore 
+            const scorePercentage = submission.totalScore !== null && submission.totalScore !== undefined && submission.maxScore 
               ? Math.round((submission.totalScore / submission.maxScore) * 100)
               : null
             return (
-              <Card key={submission.id} className="card-enhanced hover-lift shadow-brand animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+              <Card key={submission.id} className="card-enhanced hover-lift shadow-brand">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
