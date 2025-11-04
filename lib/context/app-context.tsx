@@ -222,7 +222,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const savedCVs = localStorage.getItem("cvs")
 
     if (savedUsers) setUsers(JSON.parse(savedUsers))
-    if (savedJobs) setJobs(JSON.parse(savedJobs))
+    // Don't set jobs here - we'll set them after checking for missing ones
+    // if (savedJobs) setJobs(JSON.parse(savedJobs))
     if (savedAssessments) setAssessments(JSON.parse(savedAssessments))
     if (savedSections) setSections(JSON.parse(savedSections))
     if (savedQuestions) setQuestions(JSON.parse(savedQuestions))
@@ -298,7 +299,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     // Initialize with demo jobs for the demo company (Libya-based) if no jobs exist for company "2"
     const existingJobs = savedJobs ? JSON.parse(savedJobs) : []
+    // Check localStorage directly for accuracy (state might not be updated yet)
     const hasCompanyJobs = Array.isArray(existingJobs) && existingJobs.some((job: Job) => job.companyId === "2")
+    const hasJob1 = Array.isArray(existingJobs) && existingJobs.some((job: Job) => job.id === "j1")
+    const hasJob2 = Array.isArray(existingJobs) && existingJobs.some((job: Job) => job.id === "j2")
+    const hasJob3 = Array.isArray(existingJobs) && existingJobs.some((job: Job) => job.id === "j3")
+    const hasJob4 = Array.isArray(existingJobs) && existingJobs.some((job: Job) => job.id === "j4")
+    const hasJob5 = Array.isArray(existingJobs) && existingJobs.some((job: Job) => job.id === "j5")
+    const hasJob6 = Array.isArray(existingJobs) && existingJobs.some((job: Job) => job.id === "j6")
+    
+    // Always ensure all 6 demo jobs exist
+    let finalJobsList = Array.isArray(existingJobs) ? [...existingJobs] : []
     
     if (!hasCompanyJobs) {
       const demoJobs: Job[] = [
@@ -362,35 +373,392 @@ export function AppProvider({ children }: { children: ReactNode }) {
           status: "active",
           createdAt: new Date().toISOString(),
         },
+        {
+          id: "j6",
+          companyId: "2",
+          title: "محلل بيانات",
+          description: "نبحث عن محلل بيانات لديه خبرة في تحليل البيانات واستخراج الرؤى من البيانات الكبيرة.",
+          requirements: "خبرة في Python و SQL، معرفة بتحليل البيانات والتقارير، مهارات في Excel و Power BI.",
+          location: "بنغازي، ليبيا (عمل هجين)",
+          type: "دوام كامل",
+          salary: "4500 - 7000 LYD",
+          status: "active",
+          createdAt: new Date().toISOString(),
+        },
       ]
       
       // Merge with existing jobs if any, otherwise use demo jobs only
-      const finalJobs = Array.isArray(existingJobs) && existingJobs.length > 0 
+      finalJobsList = Array.isArray(existingJobs) && existingJobs.length > 0 
         ? [...existingJobs, ...demoJobs]
         : demoJobs
-      setJobs(finalJobs)
-      localStorage.setItem("jobs", JSON.stringify(finalJobs))
-
-      // Initialize demo assessments, sections, and questions for each job
+    } else {
+      // Check which jobs are missing and add them
+      let missingJobs: Job[] = []
+      
+      if (!hasJob4) {
+        missingJobs.push({
+          id: "j4",
+          companyId: "2",
+          title: "أخصائي موارد بشرية",
+          description: "نبحث عن أخصائي موارد بشرية لديه خبرة في التوظيف وإدارة المواهب.",
+          requirements: "خبرة في التوظيف، مهارات تواصل ممتازة، إتقان برامج Microsoft Office.",
+          location: "بنغازي، ليبيا",
+          type: "دوام كامل",
+          salary: "3000 - 5000 LYD",
+          status: "active",
+          createdAt: new Date().toISOString(),
+        })
+      }
+      
+      if (!hasJob5) {
+        missingJobs.push({
+          id: "j5",
+          companyId: "2",
+          title: "محاسب مالي",
+          description: "نبحث عن محاسب مالي لديه خبرة في المحاسبة المالية وإعداد التقارير المالية.",
+          requirements: "شهادة محاسبة، خبرة في Excel، معرفة بنظم المحاسبة المالية.",
+          location: "طرابلس، ليبيا",
+          type: "دوام كامل",
+          salary: "3500 - 5500 LYD",
+          status: "active",
+          createdAt: new Date().toISOString(),
+        })
+      }
+      
+      if (!hasJob6) {
+        missingJobs.push({
+          id: "j6",
+          companyId: "2",
+          title: "محلل بيانات",
+          description: "نبحث عن محلل بيانات لديه خبرة في تحليل البيانات واستخراج الرؤى من البيانات الكبيرة.",
+          requirements: "خبرة في Python و SQL، معرفة بتحليل البيانات والتقارير، مهارات في Excel و Power BI.",
+          location: "بنغازي، ليبيا (عمل هجين)",
+          type: "دوام كامل",
+          salary: "4500 - 7000 LYD",
+          status: "active",
+          createdAt: new Date().toISOString(),
+        })
+      }
+      
+      // Add missing jobs if any
+      if (missingJobs.length > 0) {
+        finalJobsList = [...existingJobs, ...missingJobs]
+        
+        // Also add the assessments, sections, and questions for missing jobs
       const existingAssessments = savedAssessments ? JSON.parse(savedAssessments) : []
       const existingSections = savedSections ? JSON.parse(savedSections) : []
       const existingQuestions = savedQuestions ? JSON.parse(savedQuestions) : []
       
-      // Check if demo assessments exist - must have all 5 assessments (a1, a2, a3, a4, a5)
-      // Also check if we have demo jobs (j1, j2, j3, j4, j5) - if we do, we should have assessments
-      const hasDemoJobs = Array.isArray(finalJobs) && 
-        finalJobs.some((j: Job) => j.id === "j1") &&
-        finalJobs.some((j: Job) => j.id === "j2") &&
-        finalJobs.some((j: Job) => j.id === "j3") &&
-        finalJobs.some((j: Job) => j.id === "j4") &&
-        finalJobs.some((j: Job) => j.id === "j5")
+        const newAssessments: Assessment[] = []
+        const newSections: Section[] = []
+        const newQuestions: Question[] = []
+        
+        // Add assessment for job 4 if missing
+        if (!hasJob4) {
+          const hasAssessment4 = Array.isArray(existingAssessments) && existingAssessments.some((a: Assessment) => a.id === "a4")
+          
+          if (!hasAssessment4) {
+            const assessment4: Assessment = {
+              id: "a4",
+              jobId: "j4",
+              title: "تقييم أخصائي موارد بشرية",
+              description: "تقييم مهارات التواصل والتفاعل مع المرشحين",
+              timeLimitMinutes: 30,
+              passingScore: 60,
+              createdAt: new Date().toISOString(),
+            }
+
+            const section4_1: Section = {
+              id: "s4_1",
+              assessmentId: "a4",
+              title: "أسئلة MCQ - أساسيات الموارد البشرية",
+              description: "اختبار معرفتك بمبادئ الموارد البشرية",
+              sectionType: "mcq",
+              order: 0,
+              orderIndex: 0,
+            }
+
+            const section4_2: Section = {
+              id: "s4_2",
+              assessmentId: "a4",
+              title: "سؤال فيديو",
+              description: "سجل فيديو لإجابتك على السؤال التالي",
+              sectionType: "video",
+              order: 1,
+              orderIndex: 1,
+            }
+
+            const question4_1_1: Question = {
+              id: "q4_1_1",
+              sectionId: "s4_1",
+              questionText: "ما هي الخطوة الأولى في عملية التوظيف؟",
+              questionType: "mcq",
+              options: [
+                { text: "تحليل الوظيفة وتحديد المتطلبات", isCorrect: true },
+                { text: "إجراء المقابلات", isCorrect: false },
+                { text: "نشر الإعلان", isCorrect: false },
+                { text: "اختيار المرشح", isCorrect: false },
+              ],
+              correctAnswer: "تحليل الوظيفة وتحديد المتطلبات",
+              points: 10,
+              order: 0,
+              orderIndex: 0,
+            }
+
+            const question4_1_2: Question = {
+              id: "q4_1_2",
+              sectionId: "s4_1",
+              questionText: "ما هو الهدف من تقييم الأداء؟",
+              questionType: "mcq",
+              options: [
+                { text: "تحسين أداء الموظفين وتطوير مهاراتهم", isCorrect: true },
+                { text: "فصل الموظفين الضعفاء فقط", isCorrect: false },
+                { text: "تقليل التكاليف", isCorrect: false },
+                { text: "زيادة عدد الموظفين", isCorrect: false },
+              ],
+              correctAnswer: "تحسين أداء الموظفين وتطوير مهاراتهم",
+              points: 10,
+              order: 1,
+              orderIndex: 1,
+            }
+
+            const question4_2_1: Question = {
+              id: "q4_2_1",
+              sectionId: "s4_2",
+              questionText: "سجل فيديو (دقيقة واحدة) تشرح فيه كيف تتعامل مع مرشح غير مناسب لوظيفة معينة. ما هي الخطوات التي تتبعها لإبلاغه بلباقة؟",
+              questionType: "video",
+              points: 30,
+              order: 0,
+              orderIndex: 0,
+            }
+
+            newAssessments.push(assessment4)
+            newSections.push(section4_1, section4_2)
+            newQuestions.push(question4_1_1, question4_1_2, question4_2_1)
+          }
+        }
+        
+        // Add assessment for job 5 if missing
+        if (!hasJob5) {
+          const hasAssessment5 = Array.isArray(existingAssessments) && existingAssessments.some((a: Assessment) => a.id === "a5")
+          
+          if (!hasAssessment5) {
+            const assessment5: Assessment = {
+              id: "a5",
+              jobId: "j5",
+              title: "تقييم محاسب مالي",
+              description: "تقييم مهارات المحاسبة المالية واستخدام Excel",
+              timeLimitMinutes: 45,
+              passingScore: 70,
+              createdAt: new Date().toISOString(),
+            }
+
+            const section5_1: Section = {
+              id: "s5_1",
+              assessmentId: "a5",
+              title: "أسئلة MCQ - المحاسبة المالية",
+              description: "اختبار معرفتك بمبادئ المحاسبة المالية",
+              sectionType: "mcq",
+              order: 0,
+              orderIndex: 0,
+            }
+
+            const section5_2: Section = {
+              id: "s5_2",
+              assessmentId: "a5",
+              title: "مهمة Excel",
+              description: "قم بإنشاء ملف Excel يحتوي على البيانات المطلوبة",
+              sectionType: "excel",
+              order: 1,
+              orderIndex: 1,
+            }
+
+            const question5_1_1: Question = {
+              id: "q5_1_1",
+              sectionId: "s5_1",
+              questionText: "ما هو الفرق بين الميزانية العمومية وقائمة الدخل؟",
+              questionType: "mcq",
+              options: [
+                { text: "الميزانية العمومية تظهر الأصول والخصوم، قائمة الدخل تظهر الإيرادات والمصروفات", isCorrect: true },
+                { text: "لا يوجد فرق", isCorrect: false },
+                { text: "كلاهما نفس الشيء", isCorrect: false },
+                { text: "الميزانية العمومية فقط للمؤسسات الكبيرة", isCorrect: false },
+              ],
+              correctAnswer: "الميزانية العمومية تظهر الأصول والخصوم، قائمة الدخل تظهر الإيرادات والمصروفات",
+              points: 10,
+              order: 0,
+              orderIndex: 0,
+            }
+
+            const question5_1_2: Question = {
+              id: "q5_1_2",
+              sectionId: "s5_1",
+              questionText: "ما هي المعادلة المحاسبية الأساسية؟",
+              questionType: "mcq",
+              options: [
+                { text: "الأصول = الخصوم + حقوق الملكية", isCorrect: true },
+                { text: "الإيرادات = المصروفات", isCorrect: false },
+                { text: "الأصول = الخصوم فقط", isCorrect: false },
+                { text: "حقوق الملكية = الأصول × 2", isCorrect: false },
+              ],
+              correctAnswer: "الأصول = الخصوم + حقوق الملكية",
+              points: 10,
+              order: 1,
+              orderIndex: 1,
+            }
+
+            const question5_2_1: Question = {
+              id: "q5_2_1",
+              sectionId: "s5_2",
+              questionText: "قم بإنشاء ملف Excel يحتوي على قائمة ميزانية عمومية بسيطة لشهر واحد مع البيانات التالية:\n- الأصول المتداولة: 50000\n- الأصول الثابتة: 100000\n- الخصوم المتداولة: 30000\n- الخصوم طويلة الأجل: 40000\n- حقوق الملكية: (يجب حسابها)\n\nاستخدم الصيغ في Excel لحساب حقوق الملكية والمجموع الكلي. ارفع الملف بعد الانتهاء.",
+              questionType: "file_upload",
+              points: 30,
+              order: 0,
+              orderIndex: 0,
+            }
+
+            newAssessments.push(assessment5)
+            newSections.push(section5_1, section5_2)
+            newQuestions.push(question5_1_1, question5_1_2, question5_2_1)
+          }
+        }
+        
+        // Add assessment for job 6 if missing
+        if (!hasJob6) {
+          const hasAssessment6 = Array.isArray(existingAssessments) && existingAssessments.some((a: Assessment) => a.id === "a6")
+          
+          if (!hasAssessment6) {
+            const assessment6: Assessment = {
+              id: "a6",
+              jobId: "j6",
+              title: "تقييم محلل بيانات",
+              description: "تقييم مهارات تحليل البيانات والتواصل",
+              timeLimitMinutes: 50,
+              passingScore: 65,
+              createdAt: new Date().toISOString(),
+            }
+
+            const section6_1: Section = {
+              id: "s6_1",
+              assessmentId: "a6",
+              title: "أسئلة MCQ - تحليل البيانات",
+              description: "اختبار معرفتك بمبادئ تحليل البيانات",
+              sectionType: "mcq",
+              order: 0,
+              orderIndex: 0,
+            }
+
+            const section6_2: Section = {
+              id: "s6_2",
+              assessmentId: "a6",
+              title: "سؤال فيديو",
+              description: "سجل فيديو لإجابتك على السؤال التالي",
+              sectionType: "video",
+              order: 1,
+              orderIndex: 1,
+            }
+
+            const question6_1_1: Question = {
+              id: "q6_1_1",
+              sectionId: "s6_1",
+              questionText: "ما هو الهدف الرئيسي من تحليل البيانات؟",
+              questionType: "mcq",
+              options: [
+                { text: "استخراج الرؤى واتخاذ قرارات مدروسة بناءً على البيانات", isCorrect: true },
+                { text: "تخزين البيانات فقط", isCorrect: false },
+                { text: "حذف البيانات غير الضرورية", isCorrect: false },
+                { text: "نسخ البيانات من مكان لآخر", isCorrect: false },
+              ],
+              correctAnswer: "استخراج الرؤى واتخاذ قرارات مدروسة بناءً على البيانات",
+              points: 10,
+              order: 0,
+              orderIndex: 0,
+            }
+
+            const question6_1_2: Question = {
+              id: "q6_1_2",
+              sectionId: "s6_1",
+              questionText: "ما هي أداة SQL المستخدمة لاستخراج البيانات من قاعدة البيانات؟",
+              questionType: "mcq",
+              options: [
+                { text: "SELECT", isCorrect: true },
+                { text: "DELETE", isCorrect: false },
+                { text: "UPDATE", isCorrect: false },
+                { text: "INSERT", isCorrect: false },
+              ],
+              correctAnswer: "SELECT",
+              points: 10,
+              order: 1,
+              orderIndex: 1,
+            }
+
+            const question6_2_1: Question = {
+              id: "q6_2_1",
+              sectionId: "s6_2",
+              questionText: "سجل فيديو (دقيقتان) تشرح فيه كيف تقوم بتحليل مجموعة بيانات لتحديد اتجاهات المبيعات. اشرح الخطوات التي تتبعها من جمع البيانات إلى عرض النتائج.",
+              questionType: "video",
+              points: 30,
+              order: 0,
+              orderIndex: 0,
+            }
+
+            newAssessments.push(assessment6)
+            newSections.push(section6_1, section6_2)
+            newQuestions.push(question6_1_1, question6_1_2, question6_2_1)
+          }
+        }
+        
+        // Update assessments, sections, and questions if any were added
+        if (newAssessments.length > 0 || newSections.length > 0 || newQuestions.length > 0) {
+          const updatedAssessments = [...existingAssessments, ...newAssessments]
+          const updatedSections = [...existingSections, ...newSections]
+          const updatedQuestions = [...existingQuestions, ...newQuestions]
+
+          setAssessments(updatedAssessments)
+          setSections(updatedSections)
+          setQuestions(updatedQuestions)
+          localStorage.setItem("assessments", JSON.stringify(updatedAssessments))
+          localStorage.setItem("sections", JSON.stringify(updatedSections))
+          localStorage.setItem("questions", JSON.stringify(updatedQuestions))
+        }
+      }
+    }
+    
+    // Always set jobs state with final list (whether it was updated or not)
+    if (finalJobsList.length > 0) {
+      setJobs(finalJobsList)
+      localStorage.setItem("jobs", JSON.stringify(finalJobsList))
+    } else if (savedJobs) {
+      // Fallback: if no jobs were set, load from localStorage
+      setJobs(JSON.parse(savedJobs))
+    }
+
+    // Initialize demo assessments, sections, and questions for each job (only if company jobs exist)
+    if (hasCompanyJobs || hasJob6) {
+      const existingAssessments = savedAssessments ? JSON.parse(savedAssessments) : []
+      const existingSections = savedSections ? JSON.parse(savedSections) : []
+      const existingQuestions = savedQuestions ? JSON.parse(savedQuestions) : []
+      
+      // Get current jobs from state or existing jobs (use state if available, otherwise use existingJobs)
+      const currentJobs = jobs.length > 0 && jobs.some((j: Job) => j.companyId === "2") ? jobs : existingJobs
+      
+      // Check if demo assessments exist - must have all 6 assessments (a1, a2, a3, a4, a5, a6)
+      // Also check if we have demo jobs (j1, j2, j3, j4, j5, j6) - if we do, we should have assessments
+      const hasDemoJobs = Array.isArray(currentJobs) &&
+        currentJobs.some((j: Job) => j.id === "j1") &&
+        currentJobs.some((j: Job) => j.id === "j2") &&
+        currentJobs.some((j: Job) => j.id === "j3") &&
+        currentJobs.some((j: Job) => j.id === "j4") &&
+        currentJobs.some((j: Job) => j.id === "j5") &&
+        currentJobs.some((j: Job) => j.id === "j6")
       
       const hasDemoAssessments = Array.isArray(existingAssessments) && 
         existingAssessments.some((a: Assessment) => a.id === "a1") &&
         existingAssessments.some((a: Assessment) => a.id === "a2") &&
         existingAssessments.some((a: Assessment) => a.id === "a3") &&
         existingAssessments.some((a: Assessment) => a.id === "a4") &&
-        existingAssessments.some((a: Assessment) => a.id === "a5")
+        existingAssessments.some((a: Assessment) => a.id === "a5") &&
+        existingAssessments.some((a: Assessment) => a.id === "a6")
 
       // If we have demo jobs but no demo assessments, create them
       if (hasDemoJobs && !hasDemoAssessments) {
@@ -813,14 +1181,90 @@ export function AppProvider({ children }: { children: ReactNode }) {
           orderIndex: 0,
         }
 
+        // Assessment for Job 6: Data Analyst (with video question)
+        const assessment6: Assessment = {
+          id: "a6",
+          jobId: "j6",
+          title: "تقييم محلل بيانات",
+          description: "تقييم مهارات تحليل البيانات والتواصل",
+          timeLimitMinutes: 50,
+          passingScore: 65,
+          createdAt: new Date().toISOString(),
+        }
+
+        const section6_1: Section = {
+          id: "s6_1",
+          assessmentId: "a6",
+          title: "أسئلة MCQ - تحليل البيانات",
+          description: "اختبار معرفتك بمبادئ تحليل البيانات",
+          sectionType: "mcq",
+          order: 0,
+          orderIndex: 0,
+        }
+
+        const section6_2: Section = {
+          id: "s6_2",
+          assessmentId: "a6",
+          title: "سؤال فيديو",
+          description: "سجل فيديو لإجابتك على السؤال التالي",
+          sectionType: "video",
+          order: 1,
+          orderIndex: 1,
+        }
+
+        const question6_1_1: Question = {
+          id: "q6_1_1",
+          sectionId: "s6_1",
+          questionText: "ما هو الهدف الرئيسي من تحليل البيانات؟",
+          questionType: "mcq",
+          options: [
+            { text: "استخراج الرؤى واتخاذ قرارات مدروسة بناءً على البيانات", isCorrect: true },
+            { text: "تخزين البيانات فقط", isCorrect: false },
+            { text: "حذف البيانات غير الضرورية", isCorrect: false },
+            { text: "نسخ البيانات من مكان لآخر", isCorrect: false },
+          ],
+          correctAnswer: "استخراج الرؤى واتخاذ قرارات مدروسة بناءً على البيانات",
+          points: 10,
+          order: 0,
+          orderIndex: 0,
+        }
+
+        const question6_1_2: Question = {
+          id: "q6_1_2",
+          sectionId: "s6_1",
+          questionText: "ما هي أداة SQL المستخدمة لاستخراج البيانات من قاعدة البيانات؟",
+          questionType: "mcq",
+          options: [
+            { text: "SELECT", isCorrect: true },
+            { text: "DELETE", isCorrect: false },
+            { text: "UPDATE", isCorrect: false },
+            { text: "INSERT", isCorrect: false },
+          ],
+          correctAnswer: "SELECT",
+          points: 10,
+          order: 1,
+          orderIndex: 1,
+        }
+
+        const question6_2_1: Question = {
+          id: "q6_2_1",
+          sectionId: "s6_2",
+          questionText: "سجل فيديو (دقيقتان) تشرح فيه كيف تقوم بتحليل مجموعة بيانات لتحديد اتجاهات المبيعات. اشرح الخطوات التي تتبعها من جمع البيانات إلى عرض النتائج.",
+          questionType: "video",
+          points: 30,
+          order: 0,
+          orderIndex: 0,
+        }
+
         // Add all demo data
-        const demoAssessments = [assessment1, assessment2, assessment3, assessment4, assessment5]
+        const demoAssessments = [assessment1, assessment2, assessment3, assessment4, assessment5, assessment6]
         const demoSections = [
           section1_1, section1_2, section1_3,
           section2_1, section2_2,
           section3_1, section3_2,
           section4_1, section4_2,
           section5_1, section5_2,
+          section6_1, section6_2,
         ]
         const demoQuestions = [
           question1_1_1, question1_1_2,
@@ -834,6 +1278,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
           question4_2_1,
           question5_1_1, question5_1_2,
           question5_2_1,
+          question6_1_1, question6_1_2,
+          question6_2_1,
         ]
 
         const finalAssessments = Array.isArray(existingAssessments) && existingAssessments.length > 0
