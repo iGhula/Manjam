@@ -51,6 +51,7 @@ export default function JobForm({ companyId, initialData }: JobFormProps) {
           ...formData,
           companyId,
           status: formData.status as "active" | "closed" | "draft",
+          postedBy: "company",
         })
         jobId = newJob
       }

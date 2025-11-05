@@ -42,6 +42,7 @@ export interface Translations {
     adminDashboard: string
     resume: string
     selfAssessment: string
+    postProject: string
   }
 
   // Home Page
@@ -161,6 +162,46 @@ export interface Translations {
     industry: string
     size: string
     company: string
+    all: string
+    companyJobs: string
+    individualProjects: string
+    noCompanyJobs: string
+    noIndividualProjects: string
+    individualProject: string
+    noAssessmentRequired: string
+    budget: string
+    contactInfo: string
+    contactInfoDesc: string
+    email: string
+    phone: string
+    postedBy: string
+    individualUser: string
+  }
+  
+  // Projects
+  projects: {
+    postNewProject: string
+    postProjectDesc: string
+    projectInfo: string
+    projectInfoDesc: string
+    projectTitle: string
+    projectTitlePlaceholder: string
+    projectDescription: string
+    projectDescPlaceholder: string
+    skillsRequired: string
+    skillsRequiredPlaceholder: string
+    availableBudget: string
+    budgetPlaceholder: string
+    locationPlaceholder: string
+    contactDetails: string
+    contactDetailsDesc: string
+    emailRequired: string
+    phoneRequired: string
+    emailPlaceholder: string
+    phonePlaceholder: string
+    postProject: string
+    updateProject: string
+    posting: string
   }
 
   // Assessments
@@ -399,6 +440,7 @@ export const translations: Record<Language, Translations> = {
       adminDashboard: "لوحة تحكم المدير",
       resume: "السيرة الذاتية",
       selfAssessment: "التقييم الذاتي",
+      postProject: "نشر مشروع",
     },
     home: {
       title: "منصة التوظيف",
@@ -511,6 +553,44 @@ export const translations: Record<Language, Translations> = {
       size: "حجم الشركة",
       company: "الشركة",
       job: "الوظيفة",
+      all: "الكل",
+      companyJobs: "وظائف الشركات",
+      individualProjects: "مشاريع أفراد",
+      noCompanyJobs: "لا توجد وظائف شركات متاحة",
+      noIndividualProjects: "لا توجد مشاريع أفراد متاحة",
+      individualProject: "مشروع فردي",
+      noAssessmentRequired: "لا يتطلب تقييم",
+      budget: "الميزانية",
+      contactInfo: "معلومات التواصل",
+      contactInfoDesc: "إذا كنت مهتماً بهذا المشروع، يمكنك التواصل مع صاحب المشروع مباشرة:",
+      email: "البريد الإلكتروني",
+      phone: "رقم الهاتف",
+      postedBy: "نُشر بواسطة",
+      individualUser: "مستخدم فردي",
+    },
+    projects: {
+      postNewProject: "نشر مشروع جديد",
+      postProjectDesc: "هل تحتاج مساعدة في مشروع؟ انشر مشروعك هنا وسيتواصل معك المهتمون مباشرة",
+      projectInfo: "معلومات المشروع",
+      projectInfoDesc: "املأ تفاصيل المشروع الذي تحتاج مساعدة فيه. سيتمكن المرشحون من التواصل معك مباشرة.",
+      projectTitle: "عنوان المشروع",
+      projectTitlePlaceholder: "مثال: مطلوب مطور مواقع لإنشاء موقع تجاري",
+      projectDescription: "وصف المشروع بالتفصيل",
+      projectDescPlaceholder: "اشرح المشروع بالتفصيل: ماذا تحتاج؟ ما هي الأهداف؟ أي تفاصيل مهمة...",
+      skillsRequired: "المهارات والمتطلبات",
+      skillsRequiredPlaceholder: "المهارات والخبرات المطلوبة للعمل على هذا المشروع...",
+      availableBudget: "الميزانية المتاحة",
+      budgetPlaceholder: "مثال: 2000 - 3000 LYD",
+      locationPlaceholder: "مثال: عن بُعد أو طرابلس، ليبيا",
+      contactDetails: "معلومات الاتصال",
+      contactDetailsDesc: "سيتمكن المهتمون بالمشروع من التواصل معك مباشرة عبر هذه المعلومات",
+      emailRequired: "البريد الإلكتروني",
+      phoneRequired: "رقم الهاتف",
+      emailPlaceholder: "example@email.com",
+      phonePlaceholder: "+218 91 234 5678",
+      postProject: "نشر المشروع",
+      updateProject: "تحديث المشروع",
+      posting: "جاري الحفظ...",
     },
     assessments: {
       title: "عنوان التقييم",
@@ -745,6 +825,8 @@ export const translations: Record<Language, Translations> = {
       submissions: "Submissions",
       adminDashboard: "Admin Dashboard",
       resume: "Resume",
+      selfAssessment: "Self Assessment",
+      postProject: "Post Project",
     },
     home: {
       title: "Job Platform",
@@ -857,6 +939,44 @@ export const translations: Record<Language, Translations> = {
       size: "Company Size",
       company: "Company",
       job: "Job",
+      all: "All",
+      companyJobs: "Company Jobs",
+      individualProjects: "Individual Projects",
+      noCompanyJobs: "No company jobs available",
+      noIndividualProjects: "No individual projects available",
+      individualProject: "Individual Project",
+      noAssessmentRequired: "No Assessment Required",
+      budget: "Budget",
+      contactInfo: "Contact Information",
+      contactInfoDesc: "If you're interested in this project, you can contact the project owner directly:",
+      email: "Email",
+      phone: "Phone",
+      postedBy: "Posted By",
+      individualUser: "Individual User",
+    },
+    projects: {
+      postNewProject: "Post New Project",
+      postProjectDesc: "Need help with a project? Post your project here and interested people will contact you directly",
+      projectInfo: "Project Information",
+      projectInfoDesc: "Fill in the details of the project you need help with. Candidates will be able to contact you directly.",
+      projectTitle: "Project Title",
+      projectTitlePlaceholder: "Example: Looking for a web developer for a business website",
+      projectDescription: "Detailed Project Description",
+      projectDescPlaceholder: "Explain the project in detail: what do you need? What are the goals? Any important details...",
+      skillsRequired: "Skills and Requirements",
+      skillsRequiredPlaceholder: "The skills and experience required to work on this project...",
+      availableBudget: "Available Budget",
+      budgetPlaceholder: "Example: 2000 - 3000 LYD",
+      locationPlaceholder: "Example: Remote or Tripoli, Libya",
+      contactDetails: "Contact Details",
+      contactDetailsDesc: "Interested people will be able to contact you directly through this information",
+      emailRequired: "Email",
+      phoneRequired: "Phone Number",
+      emailPlaceholder: "example@email.com",
+      phonePlaceholder: "+218 91 234 5678",
+      postProject: "Post Project",
+      updateProject: "Update Project",
+      posting: "Saving...",
     },
     assessments: {
       title: "Assessment Title",

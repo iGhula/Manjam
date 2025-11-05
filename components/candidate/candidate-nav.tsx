@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Briefcase, LayoutDashboard, FileText, LogOut, Search, Menu, Home } from "lucide-react"
+import { Briefcase, LayoutDashboard, FileText, LogOut, Search, Menu, Home, PlusCircle } from "lucide-react"
 import { useApp } from "@/lib/context/app-context"
 import { useTranslation } from "@/lib/i18n/use-translation"
 import { useLanguage } from "@/lib/i18n/language-context"
@@ -29,6 +29,7 @@ export default function CandidateNav() {
   const navItems = [
     { href: "/candidate/dashboard", label: t.nav.dashboard, icon: LayoutDashboard },
     { href: "/candidate/jobs", label: t.nav.browseJobs, icon: Search },
+    { href: "/candidate/projects/new", label: t.nav.postProject, icon: PlusCircle },
     { href: "/candidate/applications", label: t.nav.applications, icon: Briefcase },
     { href: "/candidate/cv", label: t.nav.cv, icon: FileText },
   ]

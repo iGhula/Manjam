@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { MapPin, Clock, DollarSign, Building2, FileText, AlertCircle } from "lucide-react"
+import { MapPin, Clock, DollarSign, Building2, FileText, AlertCircle, User, Mail, Phone } from "lucide-react"
 import ApplyButton from "@/components/candidate/apply-button"
 import { useEffect, useState } from "react"
 import { useTranslation } from "@/lib/i18n/use-translation"
@@ -51,6 +51,8 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
   if (!currentUser) return null
   if (loading || !job) return <div className="flex items-center justify-center min-h-screen">{t.common.loading}</div>
 
+  const isIndividualProject = job.postedBy === "individual"
+
   return (
     <div className="max-w-4xl mx-auto space-y-6 section-spacing page-transition">
       <Link href="/candidate/jobs">
@@ -60,12 +62,18 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
       <Card className="card-enhanced shadow-brand">
         <CardHeader>
           <div className="flex items-start gap-4">
-            <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 animate-float">
-              <Building2 className="h-8 w-8 text-primary" />
+            <div className={`w-16 h-16 ${isIndividualProject ? 'bg-green-500/10' : 'bg-primary/10'} rounded-lg flex items-center justify-center flex-shrink-0 animate-float`}>
+              {isIndividualProject ? (
+                <User className="h-8 w-8 text-green-500" />
+              ) : (
+                <Building2 className="h-8 w-8 text-primary" />
+              )}
             </div>
             <div className="flex-1">
               <h1 className="text-3xl font-bold mb-2 gradient-text">{job.title}</h1>
-              <p className="text-xl text-muted-foreground mb-3">{company?.companyName}</p>
+              <p className="text-xl text-muted-foreground mb-3">
+                {isIndividualProject ? company?.fullName : company?.companyName}
+              </p>
               <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
                 {job.location && (
                   <div className="flex items-center gap-1">
@@ -79,7 +87,13 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                     <span>{job.type}</span>
                   </div>
                 )}
-                {job.salary && (
+                {isIndividualProject && job.budget && (
+                  <div className="flex items-center gap-1">
+                    <DollarSign className="h-4 w-4" />
+                    <span>{job.budget}</span>
+                  </div>
+                )}
+                {!isIndividualProject && job.salary && (
                   <div className="flex items-center gap-1">
                     <DollarSign className="h-4 w-4" />
                     <span>{job.salary}</span>
@@ -102,7 +116,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
             </div>
           )}
 
-          {jobAssessment && (
+          {!isIndividualProject && jobAssessment && (
             <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
               <div className="flex items-start gap-3">
                 <FileText className="h-5 w-5 text-primary flex-shrink-0 mt-0.5 animate-float" />
@@ -114,28 +128,63 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
             </div>
           )}
 
-          {existingSubmission ? (
-            <div className="bg-muted rounded-lg p-6 text-center">
-              <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-3 animate-float" />
-              <h3 className="font-semibold mb-2 gradient-text">{t.jobs.apply}</h3>
+          {isIndividualProject ? (
+            <div className="bg-green-500/5 border border-green-500/20 rounded-lg p-6">
+              <h3 className="font-bold text-lg mb-4 text-green-700 dark:text-green-400">{t.jobs.contactInfo}</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                {t.applications.status}: {existingSubmission.status === "submitted" ? t.applications.submitted : t.applications.inProgress}
+                {t.jobs.contactInfoDesc}
               </p>
-              {existingSubmission.status === "in_progress" && (
-                <Link href={`/candidate/assessments/${existingSubmission.id}`}>
-                  <Button className="btn-enhanced hover-lift shadow-brand">{t.applications.continueAssessment}</Button>
-                </Link>
-              )}
+              <div className="space-y-3">
+                {job.contactEmail && (
+                  <div className="flex items-center gap-3 p-3 bg-background rounded-lg">
+                    <Mail className="h-5 w-5 text-green-600" />
+                    <div>
+                      <p className="text-xs text-muted-foreground mb-1">{t.jobs.email}</p>
+                      <a href={`mailto:${job.contactEmail}`} className="text-sm font-medium hover:underline text-green-600">
+                        {job.contactEmail}
+                      </a>
+                    </div>
+                  </div>
+                )}
+                {job.contactPhone && (
+                  <div className="flex items-center gap-3 p-3 bg-background rounded-lg">
+                    <Phone className="h-5 w-5 text-green-600" />
+                    <div>
+                      <p className="text-xs text-muted-foreground mb-1">{t.jobs.phone}</p>
+                      <a href={`tel:${job.contactPhone}`} className="text-sm font-medium hover:underline text-green-600">
+                        {job.contactPhone}
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           ) : (
-            <div>
-              <ApplyButton jobId={id} assessmentId={jobAssessment?.id} />
-            </div>
+            <>
+              {existingSubmission ? (
+                <div className="bg-muted rounded-lg p-6 text-center">
+                  <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-3 animate-float" />
+                  <h3 className="font-semibold mb-2 gradient-text">{t.jobs.apply}</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    {t.applications.status}: {existingSubmission.status === "submitted" ? t.applications.submitted : t.applications.inProgress}
+                  </p>
+                  {existingSubmission.status === "in_progress" && (
+                    <Link href={`/candidate/assessments/${existingSubmission.id}`}>
+                      <Button className="btn-enhanced hover-lift shadow-brand">{t.applications.continueAssessment}</Button>
+                    </Link>
+                  )}
+                </div>
+              ) : (
+                <div>
+                  <ApplyButton jobId={id} assessmentId={jobAssessment?.id} />
+                </div>
+              )}
+            </>
           )}
         </CardContent>
       </Card>
 
-      {company && (
+      {!isIndividualProject && company && (
         <Card className="card-enhanced shadow-brand">
           <CardHeader>
             <CardTitle className="gradient-text">{t.jobs.company}</CardTitle>
@@ -157,6 +206,25 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                 <span>{company.size}</span>
               </div>
             )}
+          </CardContent>
+        </Card>
+      )}
+      
+      {isIndividualProject && company && (
+        <Card className="card-enhanced shadow-brand">
+          <CardHeader>
+            <CardTitle className="gradient-text">{t.jobs.postedBy}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center">
+                <User className="h-6 w-6 text-green-600" />
+              </div>
+              <div>
+                <h4 className="font-semibold">{company.fullName}</h4>
+                <p className="text-sm text-muted-foreground">{t.jobs.individualUser}</p>
+              </div>
+            </div>
           </CardContent>
         </Card>
       )}

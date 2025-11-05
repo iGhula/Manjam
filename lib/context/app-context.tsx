@@ -25,6 +25,10 @@ export interface Job {
   salary: string
   status: "active" | "closed" | "draft"
   createdAt: string
+  postedBy: "company" | "individual"
+  budget?: string
+  contactEmail?: string
+  contactPhone?: string
 }
 
 export interface Assessment {
@@ -323,6 +327,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
           salary: "4000 - 6000 LYD",
           status: "active",
           createdAt: new Date().toISOString(),
+          postedBy: "company",
         },
         {
           id: "j2",
@@ -335,6 +340,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
           salary: "3500 - 5500 LYD",
           status: "active",
           createdAt: new Date().toISOString(),
+          postedBy: "company",
         },
         {
           id: "j3",
@@ -347,6 +353,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
           salary: "5000 - 8000 LYD",
           status: "active",
           createdAt: new Date().toISOString(),
+          postedBy: "company",
         },
         {
           id: "j4",
@@ -359,6 +366,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
           salary: "3000 - 5000 LYD",
           status: "active",
           createdAt: new Date().toISOString(),
+          postedBy: "company",
         },
         {
           id: "j5",
@@ -371,6 +379,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
           salary: "3500 - 5500 LYD",
           status: "active",
           createdAt: new Date().toISOString(),
+          postedBy: "company",
         },
         {
           id: "j6",
@@ -383,6 +392,72 @@ export function AppProvider({ children }: { children: ReactNode }) {
           salary: "4500 - 7000 LYD",
           status: "active",
           createdAt: new Date().toISOString(),
+          postedBy: "company",
+        },
+        // Individual project jobs
+        {
+          id: "jp1",
+          companyId: "3", // Posted by candidate demo user
+          title: "مطلوب مطور مواقع لإنشاء موقع تجاري",
+          description: "أبحث عن مطور مواقع محترف لتصميم وتطوير موقع إلكتروني لمشروعي التجاري الخاص ببيع المنتجات اليدوية. الموقع يجب أن يكون جذاباً وسهل الاستخدام مع نظام عرض المنتجات وصفحة اتصال. أفضل استخدام WordPress أو أي منصة سهلة التحديث.",
+          requirements: "خبرة في تطوير المواقع، معرفة بـ WordPress أو مشابه، أعمال سابقة.",
+          location: "عن بُعد",
+          type: "مشروع لمرة واحدة",
+          salary: "",
+          status: "active",
+          createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+          postedBy: "individual",
+          budget: "2000 - 3000 LYD",
+          contactEmail: "candidate@demo.com",
+          contactPhone: "+218 91 234 5678",
+        },
+        {
+          id: "jp2",
+          companyId: "4", // Posted by applicant1
+          title: "مطور Backend لتطبيق جوال",
+          description: "أنا مطور Frontend وأعمل على تطبيق جوال لإدارة المهام. أحتاج إلى مطور Backend محترف لبناء API باستخدام Node.js و MongoDB. المشروع يتضمن نظام مصادقة، إدارة المستخدمين، وقاعدة بيانات للمهام. لدي التصميم والواجهة الأمامية جاهزة، أحتاج فقط للجزء الخلفي.",
+          requirements: "خبرة قوية في Node.js و Express، معرفة بـ MongoDB، خبرة في RESTful APIs، معرفة بأنظمة المصادقة (JWT).",
+          location: "عن بُعد",
+          type: "مشروع لمرة واحدة",
+          salary: "",
+          status: "active",
+          createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+          postedBy: "individual",
+          budget: "4000 - 5000 LYD",
+          contactEmail: "applicant1@demo.com",
+          contactPhone: "+218 92 345 6789",
+        },
+        {
+          id: "jp3",
+          companyId: "5", // Posted by applicant2
+          title: "مصمم جرافيك لتصميم هوية بصرية",
+          description: "أحتاج إلى مصمم جرافيك محترف لتصميم هوية بصرية كاملة لمشروعي الناشئ في مجال الأغذية الصحية. المشروع يشمل: شعار احترافي، بطاقات عمل، تصميم منشورات السوشيال ميديا، وتصميم قوائم الطعام. أريد تصميماً عصرياً يعكس الطبيعة الصحية للمنتجات.",
+          requirements: "محفظة أعمال قوية، خبرة في تصميم الهويات البصرية، إتقان Adobe Illustrator و Photoshop.",
+          location: "طرابلس، ليبيا (أو عن بُعد)",
+          type: "مشروع لمرة واحدة",
+          salary: "",
+          status: "active",
+          createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+          postedBy: "individual",
+          budget: "1500 - 2500 LYD",
+          contactEmail: "applicant2@demo.com",
+          contactPhone: "+218 93 456 7890",
+        },
+        {
+          id: "jp4",
+          companyId: "6", // Posted by applicant3
+          title: "مطور تطبيق أندرويد بسيط",
+          description: "أبحث عن مطور تطبيقات أندرويد لتطوير تطبيق بسيط لمتجري الصغير. التطبيق يجب أن يعرض قائمة المنتجات مع الصور والأسعار، ونظام طلب بسيط يرسل الطلبات عبر WhatsApp أو البريد الإلكتروني. التطبيق لا يحتاج إلى نظام دفع إلكتروني معقد.",
+          requirements: "خبرة في تطوير تطبيقات أندرويد، معرفة بـ Java أو Kotlin، أمثلة على تطبيقات سابقة.",
+          location: "عن بُعد",
+          type: "مشروع لمرة واحدة",
+          salary: "",
+          status: "active",
+          createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+          postedBy: "individual",
+          budget: "2500 - 3500 LYD",
+          contactEmail: "applicant3@demo.com",
+          contactPhone: "+218 94 567 8901",
         },
       ]
       
@@ -406,6 +481,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
           salary: "3000 - 5000 LYD",
           status: "active",
           createdAt: new Date().toISOString(),
+          postedBy: "company",
         })
       }
       
@@ -421,6 +497,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
           salary: "3500 - 5500 LYD",
           status: "active",
           createdAt: new Date().toISOString(),
+          postedBy: "company",
         })
       }
       
@@ -436,6 +513,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
           salary: "4500 - 7000 LYD",
           status: "active",
           createdAt: new Date().toISOString(),
+          postedBy: "company",
         })
       }
       
