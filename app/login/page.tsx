@@ -69,12 +69,12 @@ export default function LoginPage() {
       <div className="absolute top-4 right-4 animate-slide-in-right z-20">
         <LanguageSwitcher />
       </div>
-      <Card className="w-full max-w-md glass shadow-brand-lg animate-scale-in border-glow hover-lift relative z-10">
+      <Card className="w-full max-w-xl min-h-[700px] glass shadow-brand-lg animate-scale-in border-glow hover-lift relative z-10">
         <CardHeader className="text-center relative z-10">
           <div className="flex justify-center mb-4">
             <PlatformLogo showTitle={false} size="xl" />
           </div>
-          <CardTitle className="text-2xl gradient-text animate-fade-in animate-delay-100">{t.auth.loginTitle}</CardTitle>
+          <CardTitle className="text-2xl font-bold text-primary animate-fade-in animate-delay-100">{t.auth.loginTitle}</CardTitle>
           <CardDescription className="animate-fade-in animate-delay-200">{t.auth.loginDescription}</CardDescription>
         </CardHeader>
         <CardContent className="relative z-10">
@@ -134,11 +134,11 @@ export default function LoginPage() {
             </div>
 
             <div className="text-center text-xs text-muted-foreground border-t pt-4">
-              <p className="mb-2 font-medium">{t.auth.demoAccounts}</p>
-              <p>{t.auth.admin}: admin@demo.com</p>
-              <p>{t.auth.company}: company@demo.com</p>
-              <p>{t.auth.candidate}: candidate@demo.com</p>
-              <p className="mt-1 text-[10px]">{t.auth.anyPassword}</p>
+              <p className="mb-2 text-lg font-medium">{t.auth.demoAccounts}</p>
+              <p className="text-sm">{t.auth.admin}: admin@demo.com</p>
+              <p className="text-sm">{t.auth.company}: company@demo.com</p>
+              <p className="text-sm">{t.auth.candidate}: candidate@demo.com</p>
+              <p className="mt-1 text-sm">{t.auth.anyPassword}</p>
             </div>
           </form>
         </CardContent>

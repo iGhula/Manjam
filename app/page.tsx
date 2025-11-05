@@ -2,16 +2,19 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Briefcase, Users, FileText, Award, Menu } from "lucide-react"
 import { useTranslation } from "@/lib/i18n/use-translation"
+import { useLanguage } from "@/lib/i18n/language-context"
 import { LanguageSwitcher } from "@/components/language-switcher"
 import { PlatformLogo } from "@/components/platform-logo"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 
 export default function HomePage() {
   const t = useTranslation()
+  const { language } = useLanguage()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
@@ -78,61 +81,45 @@ export default function HomePage() {
       </header>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-20 text-center section-spacing">
-        <div className="mb-6">
-          <h1 className="text-6xl md:text-7xl font-bold mb-4 text-secondary leading-tight">
-            {t.home.platformTitle}
-          </h1>
-          <p className="text-2xl md:text-3xl font-bold text-foreground mb-8 max-w-2xl mx-auto">
-            {(() => {
-              const subtitle = t.home.subtitle
-              // For Arabic, check if it contains "الفرص" and highlight it
-              if (subtitle.includes("الفرص")) {
-                const parts = subtitle.split("الفرص")
-                return (
-                  <>
-                    {parts[0]}
-                    <span className="text-primary bg-secondary px-2 py-1 rounded">الفرص</span>
-                    {parts.slice(1).join("")}
-                  </>
-                )
-              }
-              // For English, highlight "opportunities"
-              if (subtitle.toLowerCase().includes("opportunities")) {
-                const parts = subtitle.split(/(opportunities)/i)
-                return parts.map((part, index) => 
-                  part.toLowerCase() === "opportunities" ? (
-                    <span key={index} className="text-primary bg-secondary px-2 py-1 rounded">{part}</span>
-                  ) : (
-                    <span key={index}>{part}</span>
-                  )
-                )
-              }
-              return subtitle
-            })()}
-          </p>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto text-pretty">
-            {t.home.description}
-          </p>
-        </div>
-        <div className="flex items-center justify-center gap-4 animate-fade-in animate-delay-300">
-          <Link href="/register?role=company">
-            <Button size="lg" className="text-lg btn-enhanced hover-lift shadow-brand">
-              {t.home.forCompanies}
-            </Button>
-          </Link>
-          <Link href="/register?role=jobseeker">
-            <Button size="lg" variant="outline" className="text-lg bg-transparent btn-enhanced hover-lift border-glow">
-              {t.home.forJobSeekers}
-            </Button>
-          </Link>
+      <section
+        className="w-full py-20 text-center section-spacing bg-cover bg-center bg-no-repeat min-h-[60vh] md:min-h-[70vh]"
+        style={{ backgroundImage: 'url(/banner5.jpg)' }}
+      >
+        <div className="container mx-auto px-4">
+          <div className="mb-6">
+            <div className="flex justify-center mb-8">
+              <Image
+                src={language === "ar" ? "/Manjam1.png" : "/Manjam2.png"}
+                alt={t.home.platformTitle}
+                width={800}
+                height={400}
+                className="max-w-full h-auto object-contain animate-fade-in"
+                priority
+              />
+            </div>
+            <p className="text-xl md:text-2xl text-white mb-8 max-w-2xl mx-auto text-pretty">
+              {t.home.description}
+            </p>
+          </div>
+          <div className="flex items-center justify-center gap-4 animate-fade-in animate-delay-300">
+            <Link href="/register?role=company">
+              <Button size="lg" className="text-lg btn-enhanced hover-lift shadow-brand">
+                {t.home.forCompanies}
+              </Button>
+            </Link>
+            <Link href="/register?role=jobseeker">
+              <Button size="lg" className="text-xl text-white btn-enhanced hover-lift shadow-brand">
+                {t.home.forJobSeekers}
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Features Section */}
       <section className="container mx-auto px-4 py-16 section-spacing">
         <div className="flex justify-center mb-12 w-full">
-          <h3 className="text-3xl font-bold gradient-text animate-fade-in features-heading">{t.home.features}</h3>
+          <h3 className="text-3xl font-bold  animate-fade-in features-heading">{t.home.features}</h3>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card className="p-6 text-center card-enhanced hover-lift animate-fade-in animate-delay-100">

@@ -73,12 +73,12 @@ export default function RegisterPage() {
       <div className="absolute top-4 right-4 animate-slide-in-right z-20">
         <LanguageSwitcher />
       </div>
-      <Card className="w-full max-w-md glass shadow-brand-lg animate-scale-in border-glow hover-lift relative z-10">
+      <Card className="w-full max-w-xl min-h-[700px] glass shadow-brand-lg animate-scale-in border-glow hover-lift relative z-10">
         <CardHeader className="text-center relative z-10">
           <div className="flex justify-center mb-4">
             <PlatformLogo showTitle={false} size="xl" />
           </div>
-          <CardTitle className="text-2xl gradient-text animate-fade-in animate-delay-100">{t.auth.registerTitle}</CardTitle>
+          <CardTitle className="text-2xl font-bold text-primary animate-fade-in animate-delay-100">{t.auth.registerTitle}</CardTitle>
           <CardDescription className="animate-fade-in animate-delay-200">{t.auth.enterYourInfo}</CardDescription>
         </CardHeader>
         <CardContent className="relative z-10">

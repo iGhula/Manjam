@@ -1,21 +1,40 @@
 "use client"
 
+import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
-import { Plus, Briefcase, MapPin, Clock, Users } from "lucide-react"
+import { Plus, Briefcase, MapPin, Clock, Users, Trash2 } from "lucide-react"
 import { useApp } from "@/lib/context/app-context"
 import { useTranslation } from "@/lib/i18n/use-translation"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 export default function CompanyJobsPage() {
-  const { currentUser, jobs, submissions } = useApp()
+  const { currentUser, jobs, submissions, deleteJob } = useApp()
   const t = useTranslation()
+  const [deletingJobId, setDeletingJobId] = useState<string | null>(null)
 
   if (!currentUser) return null
 
   // Get company jobs
   const companyJobs = jobs.filter((j) => j.companyId === currentUser.id)
+
+  const handleDelete = (jobId: string) => {
+    setDeletingJobId(jobId)
+    deleteJob(jobId)
+    setDeletingJobId(null)
+  }
 
   return (
     <div className="space-y-6 section-spacing page-transition">
@@ -89,6 +108,35 @@ export default function CompanyJobsPage() {
                             {t.common.edit}
                           </Button>
                         </Link>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="btn-enhanced hover-lift text-destructive hover:text-destructive"
+                              disabled={deletingJobId === job.id}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>{t.jobs.deleteJob}</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                {t.common.delete} "{job.title}"? {t.common.no}
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>{t.common.cancel}</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDelete(job.id)}
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                              >
+                                {t.common.delete}
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                     </div>
                   </div>

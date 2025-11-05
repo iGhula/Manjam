@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { Briefcase, Users, FileText, Plus } from "lucide-react"
+import { Briefcase, Users, FileText } from "lucide-react"
 import { useApp } from "@/lib/context/app-context"
 import { useTranslation } from "@/lib/i18n/use-translation"
 
@@ -24,17 +24,9 @@ export default function CompanyDashboardPage() {
 
   return (
     <div className="space-y-6 section-spacing page-transition">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold gradient-text">{t.dashboard.controlPanel}</h1>
-          <p className="text-muted-foreground">{t.dashboard.welcomeMessage} {currentUser.companyName}</p>
-        </div>
-        <Link href="/company/jobs/new">
-          <Button size="lg" className="btn-enhanced hover-lift shadow-brand">
-            <Plus className="ml-2 h-5 w-5" />
-            {t.dashboard.addNewJob}
-          </Button>
-        </Link>
+      <div>
+        <h1 className="text-3xl font-bold gradient-text">{t.dashboard.controlPanel}</h1>
+        <p className="text-muted-foreground">{t.dashboard.welcomeMessage} {currentUser.companyName}</p>
       </div>
 
       {/* Stats Cards */}

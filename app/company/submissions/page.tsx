@@ -110,7 +110,7 @@ export default function CompanySubmissionsPage() {
       {/* Submissions List */}
       <Card className="card-enhanced shadow-brand">
         <CardHeader>
-          <CardTitle className="gradient-text">{t.dashboard.allSubmissions || t.dashboard.totalSubmissions || "All Submissions"}</CardTitle>
+          <CardTitle className="">{t.dashboard.allSubmissions || t.dashboard.totalSubmissions || "All Submissions"}</CardTitle>
         </CardHeader>
         <CardContent>
           {companySubmissions.length > 0 ? (
