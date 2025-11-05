@@ -32,16 +32,16 @@ export default function SelfAssessmentQuestions({
     <div className="grid gap-3">
       {question.options.map((option: any) => {
         const isSelected = isMultiple
-          ? answer?.includes(option.value)
+          ? Array.isArray(answer) && answer.includes(option.value)
           : answer === option.value
 
         return (
           <Button
             key={option.value}
-            variant={isSelected ? "default" : "outline"}
+            variant="outline"
             onClick={() => handleOptionClick(option.value)}
             className={`justify-start h-auto py-4 px-4 text-left btn-enhanced hover-lift ${
-              isSelected ? "bg-primary text-primary-foreground" : ""
+              isSelected ? "bg-accent text-accent-foreground" : ""
             }`}
           >
             {isSelected && <Check className="ml-2 h-4 w-4" />}

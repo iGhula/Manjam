@@ -2,35 +2,37 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useApp } from "@/lib/context/app-context"
+import { useTranslation } from "@/lib/i18n/use-translation"
 import { Users, Briefcase, FileText, CheckCircle } from "lucide-react"
 
 export default function AdminDashboard() {
   const { users, jobs, submissions } = useApp()
+  const t = useTranslation()
 
   const stats = [
     {
-      title: "إجمالي المستخدمين",
+      title: t.admin.totalUsers,
       value: users.length,
       icon: Users,
       color: "text-primary",
       bgColor: "bg-primary/10",
     },
     {
-      title: "الشركات",
+      title: t.admin.companies,
       value: users.filter((u) => u.role === "company").length,
       icon: Briefcase,
       color: "text-primary",
       bgColor: "bg-primary/10",
     },
     {
-      title: "الوظائف المنشورة",
+      title: t.admin.publishedJobs,
       value: jobs.length,
       icon: FileText,
       color: "text-primary",
       bgColor: "bg-primary/10",
     },
     {
-      title: "التقديمات",
+      title: t.admin.applications,
       value: submissions.length,
       icon: CheckCircle,
       color: "text-primary",
@@ -44,8 +46,8 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-3xl font-bold mb-2">لوحة تحكم المدير</h2>
-        <p className="text-muted-foreground">نظرة عامة على نشاط المنصة</p>
+        <h2 className="text-3xl font-bold mb-2">{t.nav.adminDashboard}</h2>
+        <p className="text-muted-foreground">{t.admin.platformOverview}</p>
       </div>
 
       {/* Stats Grid */}
@@ -72,12 +74,12 @@ export default function AdminDashboard() {
         {/* Recent Users */}
         <Card>
           <CardHeader>
-            <CardTitle>المستخدمون الجدد</CardTitle>
+            <CardTitle>{t.admin.newUsers}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {recentUsers.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-4">لا يوجد مستخدمون بعد</p>
+                <p className="text-sm text-muted-foreground text-center py-4">{t.admin.noUsersYet}</p>
               ) : (
                 recentUsers.map((user) => (
                   <div key={user.id} className="flex items-center justify-between">
@@ -94,7 +96,7 @@ export default function AdminDashboard() {
                             : "bg-green-100 text-green-700"
                       }`}
                     >
-                      {user.role === "company" ? "شركة" : user.role === "admin" ? "مدير" : "باحث عن عمل"}
+                      {user.role === "company" ? t.auth.company : user.role === "admin" ? t.auth.admin : t.auth.jobSeeker}
                     </span>
                   </div>
                 ))
@@ -106,12 +108,12 @@ export default function AdminDashboard() {
         {/* Recent Jobs */}
         <Card>
           <CardHeader>
-            <CardTitle>الوظائف الحديثة</CardTitle>
+            <CardTitle>{t.admin.recentJobs}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {recentJobs.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-4">لا توجد وظائف بعد</p>
+                <p className="text-sm text-muted-foreground text-center py-4">{t.admin.noJobsYet}</p>
               ) : (
                 recentJobs.map((job) => {
                   const company = users.find((u) => u.id === job.companyId)
@@ -130,7 +132,7 @@ export default function AdminDashboard() {
                               : "bg-gray-100 text-gray-700"
                         }`}
                       >
-                        {job.status === "active" ? "نشط" : job.status === "closed" ? "مغلق" : "مسودة"}
+                        {job.status === "active" ? t.jobs.active : job.status === "closed" ? t.jobs.closed : t.jobs.draft}
                       </span>
                     </div>
                   )

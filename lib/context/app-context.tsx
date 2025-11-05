@@ -187,20 +187,9 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined)
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  // Initialize currentUser from localStorage synchronously to prevent logout on reload
-  const [currentUser, setCurrentUser] = useState<User | null>(() => {
-    if (typeof window !== "undefined") {
-      const savedUser = localStorage.getItem("currentUser")
-      if (savedUser) {
-        try {
-          return JSON.parse(savedUser)
-        } catch (e) {
-          return null
-        }
-      }
-    }
-    return null
-  })
+  // Initialize currentUser as null to prevent hydration mismatch
+  // Will be loaded from localStorage in useEffect after mount
+  const [currentUser, setCurrentUser] = useState<User | null>(null)
   const [users, setUsers] = useState<User[]>([])
   const [jobs, setJobs] = useState<Job[]>([])
   const [assessments, setAssessments] = useState<Assessment[]>([])
@@ -212,7 +201,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   // Load data from localStorage on mount
   useEffect(() => {
-    // currentUser is already loaded synchronously above, so we don't need to reload it here
+    // Load currentUser from localStorage to prevent logout on reload
+    const savedUser = localStorage.getItem("currentUser")
+    if (savedUser) {
+      try {
+        setCurrentUser(JSON.parse(savedUser))
+      } catch (e) {
+        // Ignore parse errors
+      }
+    }
+    
     const savedUsers = localStorage.getItem("users")
     const savedJobs = localStorage.getItem("jobs")
     const savedAssessments = localStorage.getItem("assessments")

@@ -5,10 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useApp } from "@/lib/context/app-context"
+import { useTranslation } from "@/lib/i18n/use-translation"
 import { Search, MapPin, DollarSign, Calendar } from "lucide-react"
 
 export default function AdminJobsPage() {
   const { jobs, users } = useApp()
+  const t = useTranslation()
   const [searchTerm, setSearchTerm] = useState("")
 
   const filteredJobs = jobs.filter(
@@ -20,18 +22,18 @@ export default function AdminJobsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold mb-2">إدارة الوظائف</h2>
-        <p className="text-muted-foreground">عرض ومراقبة جميع الوظائف المنشورة</p>
+        <h2 className="text-3xl font-bold mb-2">{t.admin.manageJobs}</h2>
+        <p className="text-muted-foreground">{t.admin.manageJobsDesc}</p>
       </div>
 
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>الوظائف ({filteredJobs.length})</CardTitle>
+            <CardTitle>{t.nav.jobs} ({filteredJobs.length})</CardTitle>
             <div className="relative w-64">
               <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="بحث في الوظائف..."
+                placeholder={t.admin.searchJobs}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pr-10"
@@ -58,31 +60,31 @@ export default function AdminJobsPage() {
                             ? "bg-red-100 text-red-700"
                             : "bg-gray-100 text-gray-700"
                       }`}
-                    >
-                      {job.status === "active" ? "نشط" : job.status === "closed" ? "مغلق" : "مسودة"}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
-                    <div className="flex items-center gap-1">
-                      <MapPin className="h-4 w-4" />
-                      {job.location}
+                      >
+                        {job.status === "active" ? t.jobs.active : job.status === "closed" ? t.jobs.closed : t.jobs.draft}
+                      </span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <DollarSign className="h-4 w-4" />
-                      {job.salary}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
-                      {new Date(job.createdAt).toLocaleDateString("ar-SA")}
-                    </div>
-                  </div>
 
-                  <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{job.description}</p>
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
+                      <div className="flex items-center gap-1">
+                        <MapPin className="h-4 w-4" />
+                        {job.location}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <DollarSign className="h-4 w-4" />
+                        {job.salary}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-4 w-4" />
+                        {new Date(job.createdAt).toLocaleDateString()}
+                      </div>
+                    </div>
 
-                  <Button variant="outline" size="sm">
-                    عرض التفاصيل
-                  </Button>
+                    <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{job.description}</p>
+
+                    <Button variant="outline" size="sm">
+                      {t.admin.viewDetails}
+                    </Button>
                 </div>
               )
             })}
@@ -90,7 +92,7 @@ export default function AdminJobsPage() {
 
           {filteredJobs.length === 0 && (
             <div className="py-12 text-center">
-              <p className="text-muted-foreground">لا توجد وظائف</p>
+              <p className="text-muted-foreground">{t.jobs.noJobs}</p>
             </div>
           )}
         </CardContent>

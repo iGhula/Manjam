@@ -4,9 +4,10 @@ import { useState } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Shield, Users, Briefcase, FileText, LogOut, Menu } from "lucide-react"
+import { Shield, Users, Briefcase, FileText, LogOut, Menu, Home } from "lucide-react"
 import { useApp } from "@/lib/context/app-context"
 import { useTranslation } from "@/lib/i18n/use-translation"
+import { useLanguage } from "@/lib/i18n/language-context"
 import { LanguageSwitcher } from "@/components/language-switcher"
 import { PlatformLogo } from "@/components/platform-logo"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
@@ -16,6 +17,7 @@ export function AdminNav() {
   const router = useRouter()
   const { currentUser, logout } = useApp()
   const t = useTranslation()
+  const { language } = useLanguage()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const handleLogout = () => {
@@ -36,10 +38,8 @@ export function AdminNav() {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <PlatformLogo showTitle={true} size="md" />
+            <PlatformLogo showTitle={false} size="xl" />
             <div className="hidden md:block">
-              <h1 className="text-xl font-bold gradient-text">{t.nav.adminDashboard}</h1>
-              <p className="text-sm text-muted-foreground">{currentUser?.fullName}</p>
             </div>
           </div>
 
@@ -56,6 +56,12 @@ export function AdminNav() {
                 </Link>
               )
             })}
+            <Link href="/">
+              <Button variant="ghost" size="sm" className="gap-2 btn-enhanced hover-lift">
+                <Home className="h-4 w-4" />
+                {language === "ar" ? "الرئيسية" : "Home"}
+              </Button>
+            </Link>
             <LanguageSwitcher />
             <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-2 btn-enhanced hover-lift">
               <LogOut className="h-4 w-4" />
@@ -103,6 +109,12 @@ export function AdminNav() {
                   })}
                 </nav>
                 <div className="mt-4 pt-4 border-t flex flex-col gap-2">
+                  <Link href="/" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="outline" className="gap-2 justify-start w-full">
+                      <Home className="h-4 w-4" />
+                      {language === "ar" ? "الرئيسية" : "Home"}
+                    </Button>
+                  </Link>
                   <div className="px-3">
                     <LanguageSwitcher />
                   </div>

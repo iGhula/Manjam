@@ -3,18 +3,20 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useApp } from "@/lib/context/app-context"
+import { useTranslation } from "@/lib/i18n/use-translation"
 import { Building2, Briefcase } from "lucide-react"
 
 export default function AdminCompaniesPage() {
   const { users, jobs } = useApp()
+  const t = useTranslation()
 
   const companies = users.filter((u) => u.role === "company")
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold mb-2">إدارة الشركات</h2>
-        <p className="text-muted-foreground">عرض وإدارة جميع الشركات المسجلة</p>
+        <h2 className="text-3xl font-bold mb-2">{t.admin.manageCompanies}</h2>
+        <p className="text-muted-foreground">{t.admin.manageCompaniesDesc}</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -40,11 +42,11 @@ export default function AdminCompaniesPage() {
                   <p className="text-muted-foreground">{company.email}</p>
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Briefcase className="h-4 w-4" />
-                    <span>{companyJobs.length} وظيفة منشورة</span>
+                    <span>{companyJobs.length} {t.admin.publishedJob}</span>
                   </div>
                 </div>
                 <Button variant="outline" className="w-full bg-transparent" size="sm">
-                  عرض التفاصيل
+                  {t.admin.viewDetails}
                 </Button>
               </CardContent>
             </Card>
@@ -56,7 +58,7 @@ export default function AdminCompaniesPage() {
         <Card>
           <CardContent className="py-12 text-center">
             <Building2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <p className="text-muted-foreground">لا توجد شركات مسجلة بعد</p>
+            <p className="text-muted-foreground">{t.admin.noRegisteredCompanies}</p>
           </CardContent>
         </Card>
       )}

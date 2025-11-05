@@ -328,6 +328,31 @@ export interface Translations {
     updated: string
     actionFailed: string
   }
+
+  // Admin
+  admin: {
+    totalUsers: string
+    companies: string
+    publishedJobs: string
+    applications: string
+    platformOverview: string
+    newUsers: string
+    recentJobs: string
+    noUsersYet: string
+    noJobsYet: string
+    manageUsers: string
+    manageUsersDesc: string
+    manageCompanies: string
+    manageCompaniesDesc: string
+    manageJobs: string
+    manageJobsDesc: string
+    viewDetails: string
+    searchByNameOrEmail: string
+    company: string
+    publishedJob: string
+    noRegisteredCompanies: string
+    searchJobs: string
+  }
 }
 
 export const translations: Record<Language, Translations> = {
@@ -654,6 +679,29 @@ export const translations: Record<Language, Translations> = {
       updated: "تم التحديث",
       actionFailed: "فشلت العملية",
     },
+    admin: {
+      totalUsers: "إجمالي المستخدمين",
+      companies: "الشركات",
+      publishedJobs: "الوظائف المنشورة",
+      applications: "التقديمات",
+      platformOverview: "نظرة عامة على نشاط المنصة",
+      newUsers: "المستخدمون الجدد",
+      recentJobs: "الوظائف الحديثة",
+      noUsersYet: "لا يوجد مستخدمون بعد",
+      noJobsYet: "لا توجد وظائف بعد",
+      manageUsers: "إدارة المستخدمين",
+      manageUsersDesc: "عرض وإدارة جميع مستخدمي المنصة",
+      manageCompanies: "إدارة الشركات",
+      manageCompaniesDesc: "عرض وإدارة جميع الشركات المسجلة",
+      manageJobs: "إدارة الوظائف",
+      manageJobsDesc: "عرض ومراقبة جميع الوظائف المنشورة",
+      viewDetails: "عرض التفاصيل",
+      searchByNameOrEmail: "بحث بالاسم أو البريد...",
+      company: "الشركة",
+      publishedJob: "وظيفة منشورة",
+      noRegisteredCompanies: "لا توجد شركات مسجلة بعد",
+      searchJobs: "بحث في الوظائف...",
+    },
   },
   en: {
     common: {
@@ -976,6 +1024,29 @@ export const translations: Record<Language, Translations> = {
       created: "Created",
       updated: "Updated",
       actionFailed: "Action failed",
+    },
+    admin: {
+      totalUsers: "Total Users",
+      companies: "Companies",
+      publishedJobs: "Published Jobs",
+      applications: "Applications",
+      platformOverview: "Platform Activity Overview",
+      newUsers: "New Users",
+      recentJobs: "Recent Jobs",
+      noUsersYet: "No users yet",
+      noJobsYet: "No jobs yet",
+      manageUsers: "Manage Users",
+      manageUsersDesc: "View and manage all platform users",
+      manageCompanies: "Manage Companies",
+      manageCompaniesDesc: "View and manage all registered companies",
+      manageJobs: "Manage Jobs",
+      manageJobsDesc: "View and monitor all published jobs",
+      viewDetails: "View Details",
+      searchByNameOrEmail: "Search by name or email...",
+      company: "Company",
+      publishedJob: "published job",
+      noRegisteredCompanies: "No registered companies yet",
+      searchJobs: "Search jobs...",
     },
   },
 }

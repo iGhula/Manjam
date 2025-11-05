@@ -49,8 +49,8 @@ export function PlatformLogo({ showTitle = true, size = "md", className = "" }: 
   const displayImageSize = effectiveSize as keyof typeof imageSizes
 
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
-      <div className="flex items-center justify-center">
+    <div className={`flex items-center gap-2 ${className} ${!showTitle ? 'overflow-hidden' : ''}`}>
+      <div className="flex items-center justify-center shrink-0">
         <Image
           src={logoPath}
           alt={t.home.platformTitle}
@@ -65,11 +65,11 @@ export function PlatformLogo({ showTitle = true, size = "md", className = "" }: 
           priority
         />
       </div>
-      {showTitle && (
-        <h1 className={`font-bold text-primary gradient-text ${textSizeClasses[size]}`}>
+      {showTitle ? (
+        <h1 className={`font-bold text-primary gradient-text ${textSizeClasses[size]} shrink-0`}>
           {t.home.platformTitle}
         </h1>
-      )}
+      ) : null}
     </div>
   )
 }

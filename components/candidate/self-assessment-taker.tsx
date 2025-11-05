@@ -108,27 +108,24 @@ export default function SelfAssessmentTaker({ userId }: SelfAssessmentTakerProps
 
   const currentQuestion = questions[currentQuestionIndex]
   const totalQuestions = questions.length
-  const answeredQuestions = Object.keys(answers).length
+  
+  // Calculate progress based on questions that have valid answers (not undefined or empty)
+  const answeredQuestions = questions.filter((q) => {
+    const answer = answers[q.id]
+    if (answer === undefined || answer === null) return false
+    if (Array.isArray(answer)) return answer.length > 0
+    return answer !== ""
+  }).length
+  
   const progress = totalQuestions > 0 ? (answeredQuestions / totalQuestions) * 100 : 0
 
   const handleAnswerChange = (value: any) => {
-    if (currentQuestion.type === "multiple") {
-      setAnswers((prev) => {
-        const currentAnswers = prev[currentQuestion.id] || []
-        const newAnswers = currentAnswers.includes(value)
-          ? currentAnswers.filter((v: any) => v !== value)
-          : [...currentAnswers, value]
-        return {
-          ...prev,
-          [currentQuestion.id]: newAnswers.length > 0 ? newAnswers : undefined,
-        }
-      })
-    } else {
-      setAnswers((prev) => ({
-        ...prev,
-        [currentQuestion.id]: value,
-      }))
-    }
+    // For multiple choice, value is already the complete array
+    // For single choice, value is the selected option value
+    setAnswers((prev) => ({
+      ...prev,
+      [currentQuestion.id]: value,
+    }))
   }
 
   const handleNext = () => {
@@ -140,6 +137,9 @@ export default function SelfAssessmentTaker({ userId }: SelfAssessmentTakerProps
   const handlePrevious = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1)
+    } else if (currentQuestionIndex === 0) {
+      // Go back to intro screen from first question
+      setHasStarted(false)
     }
   }
 
@@ -210,7 +210,7 @@ export default function SelfAssessmentTaker({ userId }: SelfAssessmentTakerProps
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm">
               <span>
-                {t.common.progress || "التقدم"}: {answeredQuestions} {t.selfAssessment.of} {totalQuestions}
+                {answeredQuestions} {t.selfAssessment.of} {totalQuestions}
               </span>
               <span>{Math.round(progress)}%</span>
             </div>
@@ -234,11 +234,11 @@ export default function SelfAssessmentTaker({ userId }: SelfAssessmentTakerProps
             <Button
               variant="outline"
               onClick={handlePrevious}
-              disabled={currentQuestionIndex === 0}
               className="btn-enhanced hover-lift"
+              type="button"
             >
               <ChevronRight className="ml-2 h-4 w-4" />
-              {t.selfAssessment.previous}
+              {currentQuestionIndex === 0 ? t.common.back : t.selfAssessment.previous}
             </Button>
 
             {currentQuestionIndex === totalQuestions - 1 ? (
