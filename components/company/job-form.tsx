@@ -19,7 +19,7 @@ interface JobFormProps {
 
 export default function JobForm({ companyId, initialData }: JobFormProps) {
   const router = useRouter()
-  const { addJob, updateJob, assessments } = useApp()
+  const { addJob, updateJob } = useApp()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
@@ -55,16 +55,8 @@ export default function JobForm({ companyId, initialData }: JobFormProps) {
         jobId = newJob
       }
 
-      // After saving job, redirect to assessment creation if no assessment exists
-      const existingAssessment = assessments.find((a) => a.jobId === jobId)
-      
-      if (!existingAssessment) {
-        // Redirect to assessment creation page
-        router.push(`/company/jobs/${jobId}/assessment/create`)
-      } else {
-        // Redirect to assessment page to add questions
-        router.push(`/company/jobs/${jobId}/assessment`)
-      }
+      // After saving job, redirect to assessment page to choose/create assessment
+      router.push(`/company/jobs/${jobId}/assessment`)
     } catch (err: any) {
       setError(err.message || "فشل حفظ الوظيفة")
     } finally {

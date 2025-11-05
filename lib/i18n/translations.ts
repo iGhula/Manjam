@@ -95,6 +95,10 @@ export interface Translations {
     enterYourCredentials: string
     selectRole: string
     jobSeeker: string
+    enterYourInfo: string
+    createAccountLoading: string
+    enterFullName: string
+    enterCompanyName: string
   }
 
   // Dashboard
